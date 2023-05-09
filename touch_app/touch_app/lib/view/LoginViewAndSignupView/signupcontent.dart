@@ -1,34 +1,31 @@
+
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/utils/helperFunctions.dart';
 import 'package:touch_app/utils/icons.dart';
-import 'package:touch_app/view/LoginView/topText.dart';
-import 'package:touch_app/view/animations/changeScreenAnimation.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/LoginButtonWidget.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/bottomTextView.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
+
+import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
+
 import 'package:touch_app/view/auth.dart';
-import 'bottomText.dart';
 
-enum Screens { createAccount, welcomeBack }
-
-class LoginContent extends StatefulWidget {
-  const LoginContent({
+class SignupContent extends StatefulWidget {
+  const SignupContent({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LoginContent> createState() => _LoginContentState();
+  State<SignupContent> createState() => _SignupContentState();
 }
 
-class _LoginContentState extends State<LoginContent>
-    with TickerProviderStateMixin {
+class _SignupContentState extends State<SignupContent> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String? errorMessage;
-  late List<Widget> createAccountContent = [];
-  late List<Widget> loginContent = [];
-
 
   Widget inputField(String hint, Icon hintIcon, bool obscureText, controller) {
     return Padding(
@@ -72,7 +69,7 @@ class _LoginContentState extends State<LoginContent>
           elevation: 10,
           shadowColor: const Color(inputFieldColor),
         ),
-        onPressed: () => state ? signUserIn() : signUserUp(),
+        onPressed: () => signUserUp(),
         child: Text(
           title,
           style: const TextStyle(
@@ -147,7 +144,8 @@ class _LoginContentState extends State<LoginContent>
               color: kLinkColor, fontSize: 18, fontWeight: FontWeight.w800),
         ));
   }
-    void wrongEmailMessage() {
+
+  void wrongEmailMessage() {
     showDialog(
         context: context,
         builder: (context) {
@@ -168,8 +166,6 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
- 
-
   Future<void> signUserUp() async {
     try {
       await Auth().signUpWithEmailAndPassword(
@@ -181,7 +177,7 @@ class _LoginContentState extends State<LoginContent>
     }
   }
 
- void signUserIn() async {
+  void signUserIn() async {
     showDialog(
       context: context,
       builder: (context) {
@@ -208,92 +204,11 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void dispose() {
-    print('debug');
     _emailController.dispose();
     _passwordController.dispose();
-    ChangeScreenAnimation.dispose();
+
     super.dispose();
   }
-
-
-  @override
-  void initState() {
-    print('initState');
-    super.initState();
-    createAccountContent = [
-      inputField('Email', closeIcon, false, _emailController),
-      inputField('Password', closeIcon, true, _passwordController),
-      loginButton('Sign Up', false),
-      orDivder(),
-      logos(),
-    ];
-    loginContent = [
-      inputField('Email', closeIcon, false, _emailController),
-      inputField('Password', closeIcon, true, _passwordController),
-      loginButton(
-        'Log In',
-        true,
-      ),
-      forgotPassword(),
-    ];
-    ChangeScreenAnimation.initState(
-        vsync: this,
-        loginItems: loginContent.length,
-        createAccountItems: createAccountContent.length);
-    for (var i = 0; i < createAccountContent.length; i++) {
-      createAccountContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
-          animation: ChangeScreenAnimation.createAccountAnimations[i],
-          child: createAccountContent[i]);
-    }
-    for (var i = 0; i < loginContent.length; i++) {
-      loginContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
-          animation: ChangeScreenAnimation.loginAnimations[i],
-          child: loginContent[i]);
-    }
-  }
-
-  // 
-
-@override
-void didUpdateWidget(LoginContent oldWidget){
-    super.didUpdateWidget(oldWidget);
-}
-
-  // @mustCallSuper
-  // @protected
-  // void didChangeDependencies() {
-  //   createAccountContent = [
-  //     inputField('Email', closeIcon, false, _emailController),
-  //     inputField('Password', closeIcon, true, _passwordController),
-  //     loginButton('Sign Up', false),
-  //     orDivder(),
-  //     logos(),
-  //   ];
-  //   loginContent = [
-  //     inputField('Email', closeIcon, false, _emailController),
-  //     inputField('Password', closeIcon, true, _passwordController),
-  //     loginButton(
-  //       'Log In',
-  //       true,
-  //     ),
-  //     forgotPassword(),
-  //   ];
-  //   ChangeScreenAnimation.initState(
-  //       vsync: this,
-  //       loginItems: loginContent.length,
-  //       createAccountItems: createAccountContent.length);
-  //   for (var i = 0; i < createAccountContent.length; i++) {
-  //     createAccountContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
-  //         animation: ChangeScreenAnimation.createAccountAnimations[i],
-  //         child: createAccountContent[i]);
-  //   }
-  //   for (var i = 0; i < loginContent.length; i++) {
-  //     loginContent[i] = HelperFunctions.wrapWithAnimatedBuilder(
-  //         animation: ChangeScreenAnimation.loginAnimations[i],
-  //         child: loginContent[i]);
-  //   }
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -303,47 +218,46 @@ void didUpdateWidget(LoginContent oldWidget){
         const Positioned(
           top: 60,
           left: 30,
-          child: TopText(),
+          child: TopTextView(
+            title: 'Create\nAccount',
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 100),
-          child: Stack(children: <Widget> [
+          child: Stack(children: <Widget>[
             Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: createAccountContent,
-              // children: currentScreen == Screens.welcomeBack
-              //     ? [
-              //         inputField('Email', closeIcon, false, _emailController),
-              //         inputField(
-              //             'Password', closeIcon, true, _passwordController),
-              //         loginButton('Sign Up', false),
-              //         orDivder(),
-              //         logos(),
-              //       ]
-              //     : [
-              //         inputField('Email', closeIcon, false, _emailController),
-              //         inputField(
-              //             'Password', closeIcon, true, _passwordController),
-              //         loginButton(
-              //           'Log In',
-              //           true,
-              //         ),
-              //         forgotPassword(),
-              //       ]
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: loginContent,
-            ),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImputWidget(
+                      hint: 'Email',
+                      hintIcon: closeIcon,
+                      obscureText: false,
+                      controller: _emailController),
+                  ImputWidget(
+                      hint: 'Password',
+                      hintIcon: closeIcon,
+                      obscureText: true,
+                      controller: _passwordController),
+                  LoginButtonWidget(
+                    title: 'Login',
+                    state: false,
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                  ),
+                  orDivder(),
+                  logos(),
+                ]),
           ]),
         ),
         const Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(bottom: 20),
-            child: BottomText(),
+            child: BottomTextView(
+                bottomText1: 'Already have an account?',
+                bottomText2: ' Sign Up',
+                state: false),
           ),
         ),
       ],

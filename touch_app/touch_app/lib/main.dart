@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/view/HomePage.dart';
-import 'package:touch_app/view/splash_view.dart';
+import 'package:touch_app/view/HomePage/Home.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,9 +22,9 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: kBackgroundColor,
         textTheme: Theme.of(context).textTheme.apply(bodyColor: kColor),
-        fontFamily: GoogleFonts.roboto(fontSize: 16).toString(),
+        //  fontFamily: GoogleFonts.roboto(fontSize: 16).toString(),
       ),
-      home: const HomePage(),
+      home: const HomeProduct(),
     );
   }
 }

@@ -1,18 +1,14 @@
-// ignore_for_file: unused_element
-
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
-
 import 'package:touch_app/utils/constants.dart';
 import 'dart:math' as math;
+import 'package:touch_app/view/LoginViewAndSignupView/signupcontent.dart';
 
-
-import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
-
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class SignupView extends StatefulWidget {
+  const SignupView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignupView> createState() => _SignupViewState();
 }
 
 topWidget(double size) {
@@ -54,7 +50,7 @@ botWidget(double size) {
   );
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignupViewState extends State<SignupView> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -73,11 +69,7 @@ class _LoginViewState extends State<LoginView> {
               bottom: -220,
               left: -40,
             ),
-            //  if    CenterWidget(size.width),
-            const LoginContentNew(),
-
-
-            // Navigator.pushReplacementNamed(context, MaterialPageRoute(builder: (_)=>LoginContent()));
+            const SignupContent(),
           ],
         ),
       );
