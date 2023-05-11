@@ -24,10 +24,10 @@ class _TopTextViewState extends State<TopTextView> {
   //   super.initState();
   // }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

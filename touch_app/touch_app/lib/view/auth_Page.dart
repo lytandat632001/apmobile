@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:touch_app/view/HomePage/Home.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
 import 'package:touch_app/view/login_view.dart';
 
 import 'HomePage.dart';
@@ -16,9 +18,9 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const HomePage();
+            return const HomeProduct();
           } else {
-            return const LoginView();
+            return const LoginContentNew();
           }
         },
       ),

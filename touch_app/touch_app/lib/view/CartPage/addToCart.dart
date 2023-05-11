@@ -17,6 +17,7 @@ class AddToCart {
           mode: Mode.ADVANCE,
           duration: Duration(seconds: 5),
         ).show(context);
+        Navigator.pop(context);
       } else {
         itemsOnCart.add(data);
         const AdvanceSnackBar(
@@ -26,6 +27,7 @@ class AddToCart {
           mode: Mode.ADVANCE,
           duration: Duration(seconds: 5),
         ).show(context);
+        Navigator.pop(context);
       }
     } catch (e) {
       rethrow;

@@ -1,4 +1,3 @@
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -177,36 +176,35 @@ class _SignupContentState extends State<SignupContent> {
     }
   }
 
-  void signUserIn() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
-      }
-    }
-  }
+  // void signUserIn() async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return const Center(
+  //         child: CircularProgressIndicator(),
+  //       );
+  //     },
+  //   );
+  //   try {
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: _emailController.text.trim(),
+  //       password: _passwordController.text.trim(),
+  //     );
+  //     Navigator.pop(context);
+  //   } on FirebaseAuthException catch (e) {
+  //     Navigator.pop(context);
+  //     if (e.code == 'user-not-found') {
+  //       wrongEmailMessage();
+  //     } else if (e.code == 'wrong-password') {
+  //       wrongPasswordMessage();
+  //     }
+  //   }
+  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-
     super.dispose();
   }
 

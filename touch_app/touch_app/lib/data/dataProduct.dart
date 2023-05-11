@@ -129,7 +129,7 @@ List<Product> accessories = [
 List<Product> shoes = [
   Product(
       idProduct: 0,
-      title: "PREDATOR EDGE.1 LOW FIRM GROUND BOOTS",
+      title: "PREDATOR EDGE.1 LOW ",
       description: "Football",
       image: 'assets/images/PREDATOR.jpg',
       price: 200,
@@ -142,7 +142,7 @@ List<Product> shoes = [
       value: 1),
   Product(
       idProduct: 1,
-      title: "AX SPEEDPORTAL.3 FIRM GROUND BOOTS",
+      title: "AX SPEEDPORTAL.3 ",
       description: "Football",
       image: 'assets/images/xspeed.jpg',
       price: 20,
@@ -196,3 +196,19 @@ List<Product> itemsOnCart = [
       star: 4.0,
       value: 1),
 ];
+List<Product> itemsOnLikes = [
+  Product(
+      idProduct: 3,
+      title: "FORUM LOW SHOES",
+      description: "Basketball",
+      image: 'assets/images/Forum.jpg',
+      price: 20,
+      priceBase: 12,
+      category: 'Men',
+      subCategory: 'Shoes',
+      voucher: '0.4',
+      review: "Good",
+      star: 4.0,
+      value: 1),
+];
+List<Product> itemsOnExplore = [];

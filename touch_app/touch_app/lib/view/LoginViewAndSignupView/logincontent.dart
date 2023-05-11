@@ -11,8 +11,7 @@ import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
 
 import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
 
-import 'package:touch_app/view/auth.dart';
-
+// import 'package:touch_app/view/auth.dart';
 
 class LoginContentNew extends StatefulWidget {
   const LoginContentNew({
@@ -31,7 +30,6 @@ class _LoginContentNewState extends State<LoginContentNew> {
   String bottomText2 = 'Sign Up';
   String title = 'Welcome\nBack';
 
-  
   Widget forgotPassword() {
     return TextButton(
         onPressed: () {},
@@ -63,16 +61,6 @@ class _LoginContentNewState extends State<LoginContentNew> {
     );
   }
 
-  Future<void> signUserUp() async {
-    try {
-      await Auth().signUpWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
 
   void signUserIn() async {
     showDialog(

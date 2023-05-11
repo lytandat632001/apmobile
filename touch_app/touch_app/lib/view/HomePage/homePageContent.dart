@@ -8,6 +8,7 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/view/ExplorePage/explorePage.dart';
 import 'package:touch_app/view/details.dart/details.dart';
 
 import 'buildCard.dart';
@@ -79,203 +80,201 @@ class _HomePageContentState extends State<HomePageContent> {
                     delay: const Duration(milliseconds: 200),
                     child: Row(
                       children: [
-                        Container(
-                          height: 32,
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1.0),
-                          ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.black87,
-                                backgroundColor: kBackgroundColor,
-                                elevation: 0),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return SizedBox(
-                                    width: size.width,
-                                    height: size.height * 0.3,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          /// Title
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'LỌC THEO DANH MỤC',
-                                                style: TextStyle(
-                                                    fontSize: 22,
-                                                    fontWeight: FontWeight.w800,
-                                                    color: kColor),
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.close,
-                                                    color: kColor,
-                                                    size: 30,
-                                                  )),
-                                            ],
-                                          ),
+                        // Container(
+                        //   height: 32,
+                        //   decoration: BoxDecoration(
+                        //     border: Border.all(width: 1.0),
+                        //   ),
+                        //   child: ElevatedButton(
+                        //     style: ElevatedButton.styleFrom(
+                        //         foregroundColor: Colors.black87,
+                        //         backgroundColor: kBackgroundColor,
+                        //         elevation: 0),
+                        //     onPressed: () {
+                        //       showModalBottomSheet(
+                        //         context: context,
+                        //         builder: (context) {
+                        //           return SizedBox(
+                        //             width: size.width,
+                        //             height: size.height * 0.3,
+                        //             child: Padding(
+                        //               padding: const EdgeInsets.all(15.0),
+                        //               child: Column(
+                        //                 mainAxisAlignment:
+                        //                     MainAxisAlignment.spaceAround,
+                        //                 children: [
+                        //                   /// Title
+                        //                   Row(
+                        //                     mainAxisAlignment:
+                        //                         MainAxisAlignment.spaceBetween,
+                        //                     children: [
+                        //                       const Text(
+                        //                         'LỌC THEO DANH MỤC',
+                        //                         style: TextStyle(
+                        //                             fontSize: 22,
+                        //                             fontWeight: FontWeight.w800,
+                        //                             color: kColor),
+                        //                       ),
+                        //                       IconButton(
+                        //                           onPressed: () {
+                        //                             Navigator.pop(context);
+                        //                           },
+                        //                           icon: const Icon(
+                        //                             Icons.close,
+                        //                             color: kColor,
+                        //                             size: 30,
+                        //                           )),
+                        //                     ],
+                        //                   ),
 
-                                          Wrap(
-                                            direction: Axis.horizontal,
-                                            children: List.generate( 
-                                              titleBottomSheet.length,
-                                              (index) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _update(titleBottomSheet,
-                                                          index);
-
-                                                     
-                                                    });
-                                                    print(
-                                                        titleBottomSheet[index]
-                                                            .isSelected);
-                                                  },
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      IconCheck(
-                                                          titleBottomSheet:
-                                                              titleBottomSheet[
-                                                                      index]
-                                                                  .name,
-                                                          isSelected:
-                                                              temp[index]),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text(
-                                                      //       titleBottomSheet[
-                                                      //               index]
-                                                      //           .name,
-                                                      //       style: const TextStyle(
-                                                      //           color: kColor,
-                                                      //           fontSize: 16,
-                                                      //           fontWeight:
-                                                      //               FontWeight
-                                                      //                   .w400),
-                                                      //     ),
-                                                      //     Icon(
-                                                      //       Icons.check,
-                                                      //       color: (titleBottomSheet[
-                                                      //                       index]
-                                                      //                   .isSelected ==
-                                                      //               true)
-                                                      //           ? Colors.black
-                                                      //           : Colors
-                                                      //               .transparent,
-                                                      //     ),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Row(
-                              children: const [
-                                Text(
-                                  'TRẺ EM',
-                                  style: TextStyle(
-                                      color: kColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Icon(
-                                  Icons.expand_more,
-                                  size: 25,
-                                  color: kColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: SizedBox(
-                            height: 40,
-                            child: MultiSelectContainer(
-                                textStyles: const MultiSelectTextStyles(
-                                    textStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400),
-                                    selectedTextStyle: TextStyle(
-                                        color: kColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400)),
-                                isMaxSelectableWithPerpetualSelects: true,
-                                showInListView: true,
-                                listViewSettings: ListViewSettings(
-                                    scrollDirection: Axis.horizontal,
-                                    separatorBuilder: (_, __) => const SizedBox(
-                                          width: 10,
-                                        )),
-                                itemsDecoration: MultiSelectDecorations(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1.0, color: Colors.grey),
-                                    color: kBackgroundColor,
-                                  ),
-                                  // disabledDecoration: BoxDecoration(
-                                  //   color: Colors.black,
-                                  //   border: Border.all(
-                                  //       width: 1.0, color: Colors.black45),
-                                  // ),
-                                  selectedDecoration: BoxDecoration(
-                                    color: kBackgroundColor,
-                                    border: Border.all(
-                                        width: 1.0, color: kPrimaryColor),
-                                  ),
-                                ),
-                                items: [
-                                  MultiSelectCard(
-                                      value: 'Hat',
-                                      label: 'Hat',
-                                      selected: true),
-                                  MultiSelectCard(
-                                      value: 'Clothing',
-                                      label: 'Clothing',
-                                      selected: true),
-                                  MultiSelectCard(
-                                      value: 'Accessories',
-                                      label: 'Accessories',
-                                      selected: true),
-                                  MultiSelectCard(
-                                      value: 'Shoes',
-                                      label: 'Shoes',
-                                      selected: true),
-                                  MultiSelectCard(
-                                      value: 'Socks',
-                                      label: 'Socks',
-                                      selected: true),
-                                ],
-                                onChange: (allSelectedItems, selectedItem) {
-                                  print(allSelectedItems);
-                                }),
-                          ),
-                        )
+                        //                   Wrap(
+                        //                     direction: Axis.horizontal,
+                        //                     children: List.generate(
+                        //                       titleBottomSheet.length,
+                        //                       (index) {
+                        //                         return InkWell(
+                        //                           onTap: () {
+                        //                             setState(() {
+                        //                               _update(titleBottomSheet,
+                        //                                   index);
+                        //                             });
+                        //                             print(
+                        //                                 titleBottomSheet[index]
+                        //                                     .isSelected);
+                        //                           },
+                        //                           child: Column(
+                        //                             mainAxisAlignment:
+                        //                                 MainAxisAlignment
+                        //                                     .spaceAround,
+                        //                             children: [
+                        //                               IconCheck(
+                        //                                   titleBottomSheet:
+                        //                                       titleBottomSheet[
+                        //                                               index]
+                        //                                           .name,
+                        //                                   isSelected:
+                        //                                       temp[index]),
+                        //                               // Row(
+                        //                               //   children: [
+                        //                               //     Text(
+                        //                               //       titleBottomSheet[
+                        //                               //               index]
+                        //                               //           .name,
+                        //                               //       style: const TextStyle(
+                        //                               //           color: kColor,
+                        //                               //           fontSize: 16,
+                        //                               //           fontWeight:
+                        //                               //               FontWeight
+                        //                               //                   .w400),
+                        //                               //     ),
+                        //                               //     Icon(
+                        //                               //       Icons.check,
+                        //                               //       color: (titleBottomSheet[
+                        //                               //                       index]
+                        //                               //                   .isSelected ==
+                        //                               //               true)
+                        //                               //           ? Colors.black
+                        //                               //           : Colors
+                        //                               //               .transparent,
+                        //                               //     ),
+                        //                               //   ],
+                        //                               // ),
+                        //                             ],
+                        //                           ),
+                        //                         );
+                        //                       },
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //           );
+                        //         },
+                        //       );
+                        //     },
+                        //     child: Row(
+                        //       children: const [
+                        //         Text(
+                        //           'TRẺ EM',
+                        //           style: TextStyle(
+                        //               color: kColor,
+                        //               fontSize: 14,
+                        //               fontWeight: FontWeight.bold),
+                        //         ),
+                        //         Icon(
+                        //           Icons.expand_more,
+                        //           size: 25,
+                        //           color: kColor,
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 40.0),
+                        //   child: SizedBox(
+                        //     height: 40,
+                        //     child: MultiSelectContainer(
+                        //         textStyles: const MultiSelectTextStyles(
+                        //             textStyle: TextStyle(
+                        //                 color: Colors.grey,
+                        //                 fontSize: 15,
+                        //                 fontWeight: FontWeight.w400),
+                        //             selectedTextStyle: TextStyle(
+                        //                 color: kColor,
+                        //                 fontSize: 15,
+                        //                 fontWeight: FontWeight.w400)),
+                        //         isMaxSelectableWithPerpetualSelects: true,
+                        //         showInListView: true,
+                        //         listViewSettings: ListViewSettings(
+                        //             scrollDirection: Axis.horizontal,
+                        //             separatorBuilder: (_, __) => const SizedBox(
+                        //                   width: 10,
+                        //                 )),
+                        //         itemsDecoration: MultiSelectDecorations(
+                        //           decoration: BoxDecoration(
+                        //             border: Border.all(
+                        //                 width: 1.0, color: Colors.grey),
+                        //             color: kBackgroundColor,
+                        //           ),
+                        //           // disabledDecoration: BoxDecoration(
+                        //           //   color: Colors.black,
+                        //           //   border: Border.all(
+                        //           //       width: 1.0, color: Colors.black45),
+                        //           // ),
+                        //           selectedDecoration: BoxDecoration(
+                        //             color: kBackgroundColor,
+                        //             border: Border.all(
+                        //                 width: 1.0, color: kPrimaryColor),
+                        //           ),
+                        //         ),
+                        //         items: [
+                        //           MultiSelectCard(
+                        //               value: 'Hat',
+                        //               label: 'Hat',
+                        //               selected: true),
+                        //           MultiSelectCard(
+                        //               value: 'Clothing',
+                        //               label: 'Clothing',
+                        //               selected: true),
+                        //           MultiSelectCard(
+                        //               value: 'Accessories',
+                        //               label: 'Accessories',
+                        //               selected: true),
+                        //           MultiSelectCard(
+                        //               value: 'Shoes',
+                        //               label: 'Shoes',
+                        //               selected: true),
+                        //           MultiSelectCard(
+                        //               value: 'Socks',
+                        //               label: 'Socks',
+                        //               selected: true),
+                        //         ],
+                        //         onChange: (allSelectedItems, selectedItem) {
+                        //           print(allSelectedItems);
+                        //         }),
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
@@ -302,7 +301,13 @@ class _HomePageContentState extends State<HomePageContent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('See all');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ExplorePage(
+                                      data: clothing,
+                                    ),
+                                  ));
                             },
                             child: const Text(
                               "See all",
@@ -322,7 +327,6 @@ class _HomePageContentState extends State<HomePageContent> {
                       height: size.height * 0.5,
                       color: kBackgroundColor,
                       child: PageView.builder(
-                       
                         controller: _controllerClothing,
                         physics: const BouncingScrollPhysics(),
                         itemCount: clothing.length,
@@ -367,6 +371,13 @@ class _HomePageContentState extends State<HomePageContent> {
                           GestureDetector(
                             onTap: () {
                               print('See all');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ExplorePage(
+                                      data: accessories,
+                                    ),
+                                  ));
                             },
                             child: const Text(
                               "See all",
@@ -394,6 +405,12 @@ class _HomePageContentState extends State<HomePageContent> {
                           return GestureDetector(
                             onTap: () {
                               print(data.title);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(data: accessories[index])),
+                              );
                             },
                             child:
                                 view(index, size, _controllerAccessories, data),
@@ -425,6 +442,13 @@ class _HomePageContentState extends State<HomePageContent> {
                           GestureDetector(
                             onTap: () {
                               print('See all');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ExplorePage(
+                                      data: shoes,
+                                    ),
+                                  ));
                             },
                             child: const Text(
                               "See all",
@@ -452,6 +476,12 @@ class _HomePageContentState extends State<HomePageContent> {
                           return GestureDetector(
                               onTap: () {
                                 print(data.title);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Details(data: shoes[index])),
+                                );
                               },
                               child: view(index, size, _controllerShoes, data));
                         },

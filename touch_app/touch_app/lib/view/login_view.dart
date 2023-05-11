@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'dart:math' as math;
 
-
 import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
 
 class LoginView extends StatefulWidget {
@@ -58,28 +57,27 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return
-       Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            Positioned(
-              child: topWidget(size.width),
-              top: -180,
-              left: 15,
-            ),
-            Positioned(
-              child: botWidget(size.width),
-              bottom: -220,
-              left: -40,
-            ),
-            //  if    CenterWidget(size.width),
-            const LoginContentNew(),
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      // body: Stack(
+      //   children: [
+      //     Positioned(
+      //       child: topWidget(size.width),
+      //       top: -180,
+      //       left: 15,
+      //     ),
+      //     Positioned(
+      //       child: botWidget(size.width),
+      //       bottom: -220,
+      //       left: -40,
+      //     ),
+      //     //  if    CenterWidget(size.width),
+      //     const LoginContentNew(),
 
-
-            // Navigator.pushReplacementNamed(context, MaterialPageRoute(builder: (_)=>LoginContent()));
-          ],
-        ),
-      );
+      //     // Navigator.pushReplacementNamed(context, MaterialPageRoute(builder: (_)=>LoginContent()));
+      //   ],
+      // ),
+      body: LoginContentNew(),
+    );
   }
 }

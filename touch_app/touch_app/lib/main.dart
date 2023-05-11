@@ -1,7 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:touch_app/test.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
+import 'package:touch_app/view/auth_Page.dart';
+import 'package:touch_app/view/splash_view.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,7 +29,7 @@ class MainApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: kColor),
         //  fontFamily: GoogleFonts.roboto(fontSize: 16).toString(),
       ),
-      home: const HomeProduct(),
+      home: const Test(),
     );
   }
 }

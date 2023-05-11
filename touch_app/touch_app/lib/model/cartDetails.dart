@@ -1,15 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-class Cart {
-  late final int idCart;
-  int quantity;
-  int idUser;
+class CartDetails {
+  int cartDetails;
+  int idCart;
   int idProduct;
   int code;
-  Cart({
+  int quantity;
+  CartDetails({
+    required this.cartDetails,
     required this.idCart,
-    required this.quantity,
-    required this.idUser,
     required this.idProduct,
     required this.code,
+    required this.quantity,
   });
 }

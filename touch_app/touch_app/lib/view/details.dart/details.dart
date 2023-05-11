@@ -1,12 +1,13 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:touch_app/bloc/addToCart/addToCartBloc.dart';
-import 'package:touch_app/bloc/addToCart/addToCartEvent.dart';
+import 'package:get/get.dart';
+import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/view/CartPage/addToCart.dart';
 
 class Details extends StatefulWidget {
   const Details({super.key, required this.data});
@@ -18,15 +19,18 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   int selectedSize = 3;
-  int selectedColor = 0;
+  // int selectedColor = 0;
   @override
   Widget build(BuildContext context) {
     Product current = widget.data;
+    bool contains = itemsOnCart.contains(current);
+    bool containsLike = itemsOnLikes.contains(current);
+    // bool value = containsLike;
+
     final size = MediaQuery.of(context).size;
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: kBackgroundColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -98,18 +102,27 @@ class _DetailsState extends State<Details> {
                                     color: kColor,
                                     fontWeight: FontWeight.bold),
                               ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.favorite_border_outlined,
-                                    size: 25,
-                                  ))
+                              FavoriteButton(
+                                iconSize: 45,
+                                valueChanged: (value) {
+                                  setState(() {
+                                    if (containsLike == true) {
+                                      value = false;
+                                    } else {
+                                      itemsOnLikes.add(current);
+                                      value = true;
+                                    }
+                                  });
+                                },
+                                isFavorite: false,
+                                iconColor: Colors.blue,
+                              ),
                             ],
                           ),
                         ),
                         Row(
                           children: [
-                            Text('₫${current.price}0.000',
+                            Text('₫${current.price}',
                                 style: const TextStyle(
                                     fontSize: 20, color: kColor)),
                             const SizedBox(width: 40),
@@ -126,7 +139,7 @@ class _DetailsState extends State<Details> {
                           padding: const EdgeInsets.only(top: 10, bottom: 20),
                           child: Row(
                             children: [
-                              Text('₫${current.priceBase}0.000',
+                              Text('₫${current.priceBase}',
                                   style: const TextStyle(
                                       fontSize: 20, color: kColor)),
                               const SizedBox(width: 40),
@@ -203,17 +216,29 @@ class _DetailsState extends State<Details> {
                               //  elevation: MaterialStateProperty.all(0),
                             ),
                             onPressed: () {
+                              String messageText;
                               setState(() {
-                                AddToCart.addToCart(current, context);
-                              });
+                                // AddToCart.addToCart(current, context);
 
-                              // final cartBloc = context.read<CartBloc>();
-                              // cartBloc.add(AddToCartBloc(data: current));
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(const SnackBar(
-                              //   content: Text('Product added To Cart'),
-                              //   duration: Duration(seconds: 2),
-                              // ));
+                                if (contains == true) {
+                                  messageText =
+                                      "Sản phẩm đã tồn tại trong giỏ hàng!";
+                                } else {
+                                  itemsOnCart.add(current);
+                                  messageText =
+                                      "Sản phẩm đã được thêm vào giỏ hàng!";
+                                }
+
+                                var snackBar = SnackBar(
+                                    backgroundColor: Colors.transparent,
+                                    duration: const Duration(seconds: 3),
+                                    content: AwesomeSnackbarContent(
+                                        title: current.title,
+                                        message: messageText,
+                                        contentType: ContentType.success));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              });
                             },
                             child: SizedBox(
                               height: 40,
