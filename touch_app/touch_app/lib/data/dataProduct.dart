@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:touch_app/model/product.dart';
+import 'package:touch_app/model/user.dart';
 
 List<Product> clothing = [
   Product(
@@ -212,3 +213,12 @@ List<Product> itemsOnLikes = [
       value: 1),
 ];
 List<Product> itemsOnExplore = [];
+List<User> userlist = [
+  User(
+      idUser: 0,
+      email: "lytandat@gmail.com",
+      password: "123456",
+      fullname: "Lý Tấn Đạt",
+      phone: "0974399560",
+      address: "KTX Mỹ Thuật Trang Trí Đồng Nai"),
+];

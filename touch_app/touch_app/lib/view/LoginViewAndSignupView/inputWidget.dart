@@ -5,7 +5,11 @@ import 'package:touch_app/utils/constants.dart';
 
 class ImputWidget extends StatefulWidget {
   const ImputWidget({
-    super.key, required this.hint, required this.hintIcon, required this.obscureText, this.controller,
+    super.key,
+    required this.hint,
+    required this.hintIcon,
+    required this.obscureText,
+    this.controller,
   });
   final String hint;
   final Icon hintIcon;
@@ -19,6 +23,7 @@ class ImputWidget extends StatefulWidget {
 class _ImputWidgetState extends State<ImputWidget> {
   @override
   Widget build(BuildContext context) {
+   // String hintText = widget.controller.toString();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
       child: SizedBox(
@@ -28,6 +33,10 @@ class _ImputWidgetState extends State<ImputWidget> {
           borderRadius: BorderRadius.circular(20),
           shadowColor: Colors.black87,
           child: TextField(
+            // onChanged: (value) {
+            //   hintText = value;
+            //   print(hintText);
+            // },
             controller: widget.controller,
             obscureText: widget.obscureText,
             textAlignVertical: TextAlignVertical.bottom,

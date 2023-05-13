@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/view/auth_Page.dart';
+import 'package:touch_app/view/login_view.dart';
 
 class SplashView extends StatelessWidget {
   const SplashView({super.key});
@@ -14,12 +14,11 @@ class SplashView extends StatelessWidget {
     Timer(
         const Duration(seconds: 3),
         () => {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => const AuthPage())),
+
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => const AuthPage()))
+                      builder: (BuildContext context) => const LoginView()))
             });
     // Timer(const Duration(seconds: 3), () => {Get.to(const AuthPage())});
     return MaterialApp(

@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 
@@ -71,20 +70,20 @@ class _LoginContentNewState extends State<LoginContentNew> {
         );
       },
     );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
-      }
-    }
+    // try {
+    //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //     email: _emailController.text.trim(),
+    //     password: _passwordController.text.trim(),
+    //   );
+    //   Navigator.pop(context);
+    // } on FirebaseAuthException catch (e) {
+    //   Navigator.pop(context);
+    //   if (e.code == 'user-not-found') {
+    //     wrongEmailMessage();
+    //   } else if (e.code == 'wrong-password') {
+    //     wrongPasswordMessage();
+    //   }
+    // }
   }
 
   @override

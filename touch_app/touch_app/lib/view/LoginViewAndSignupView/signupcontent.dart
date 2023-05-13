@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/icons.dart';
@@ -10,7 +10,7 @@ import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
 
 import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
 
-import 'package:touch_app/view/auth.dart';
+
 
 class SignupContent extends StatefulWidget {
   const SignupContent({
@@ -61,23 +61,27 @@ class _SignupContentState extends State<SignupContent> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(inputFieldColor),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          shape: const StadiumBorder(),
-          elevation: 10,
-          shadowColor: const Color(inputFieldColor),
-        ),
-        onPressed: () => signUserUp(),
-        child: Text(
-          title,
-          style: const TextStyle(
-            color: kColor,
-            fontSize: 23,
-            fontWeight: FontWeight.w500,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(inputFieldColor),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            shape: const StadiumBorder(),
+            elevation: 10,
+            shadowColor: const Color(inputFieldColor),
           ),
-        ),
-      ),
+          onPressed: () {
+            child:
+            Text(
+              title,
+              style: const TextStyle(
+                color: kColor,
+                fontSize: 23,
+                fontWeight: FontWeight.w500,
+              ),
+            );
+          }, child: null,
+          //=>  signUserUp(),
+
+          ),
     );
   }
 
@@ -165,16 +169,16 @@ class _SignupContentState extends State<SignupContent> {
     );
   }
 
-  Future<void> signUserUp() async {
-    try {
-      await Auth().signUpWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
+  // Future<void> signUserUp() async {
+  //   try {
+  //     await Auth().signUpWithEmailAndPassword(
+  //         _emailController.text, _passwordController.text);
+  //   } on FirebaseAuthException catch (e) {
+  //     setState(() {
+  //       errorMessage = e.message;
+  //     });
+  //   }
+  // }
 
   // void signUserIn() async {
   //   showDialog(

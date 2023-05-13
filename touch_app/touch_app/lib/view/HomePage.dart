@@ -1,11 +1,6 @@
 // ignore_for_file: file_names
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
-import 'package:touch_app/view/auth_Page.dart';
-
-import 'login_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,18 +11,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void signOut() async{
-   await FirebaseAuth.instance.signOut();
-   // ignore: use_build_context_synchronously
-   Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const AuthPage()));
-  }
-  String check() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      return user.email.toString();
-    } else {
-      return 'null';
-    }
+  //  await FirebaseAuth.instance.signOut();
+  //  // ignore: use_build_context_synchronously
+  //  Navigator.pushReplacement(
+  //       context, MaterialPageRoute(builder: (context) => const AuthPage()));
+  // }
+  // String check() {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     return user.email.toString();
+  //   } else {
+  //     return 'null';
+  //   }
   }
 
   @override
@@ -42,7 +37,8 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Center(
           child: Text(
-            'Logged In! ${check()}',
+            //'Logged In! ${check()}'
+            "a",
             style: const TextStyle(fontWeight: FontWeight.normal),
           ),
         ),
