@@ -1,4 +1,17 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// class Product {
+//   late final int idProduct;
+//   final String title;
+//   final String description;
+//   final String image;
+//   final double price;
+//   final double priceBase;
+//   final String idCategory;
+//   final String review;
+//   final double star;
+//   Product(this.title, this.description, this.image, this.price, this.priceBase,
+//       this.idCategory, this.review, this.star);
+      
+// }
 class Product {
   late final int idProduct;
   final String title;
@@ -6,23 +19,31 @@ class Product {
   final String image;
   final double price;
   final double priceBase;
-  final String category;
-  final String subCategory;
-  final String voucher;
+  final String idCategory;
   final String review;
   final double star;
-   int value;
-  Product(
-      {required this.idProduct,
-      required this.title,
-      required this.description,
-      required this.image,
-      required this.price,
-      required this.priceBase,
-      required this.category,
-      required this.subCategory,
-      required this.voucher,
-      required this.review,
-      required this.star,
-      required this.value});
+
+  Product({
+    required this.title,
+    required this.description,
+    required this.image,
+    required this.price,
+    required this.priceBase,
+    required this.idCategory,
+    required this.review,
+    required this.star,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      title: json['title'],
+      description: json['description'],
+      image: json['image'],
+      price: json['price'],
+      priceBase: json['priceBase'],
+      idCategory: json['idCategory'],
+      review: json['review'],
+      star: json['star'],
+    );
+  }
 }

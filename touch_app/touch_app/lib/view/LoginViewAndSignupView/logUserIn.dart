@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:touch_app/view/auth.dart';
 
 void logUserIn(BuildContext context, final emailController,
     final passwordController) async {
@@ -13,19 +12,7 @@ void logUserIn(BuildContext context, final emailController,
       );
     },
   );
-  // try {
-  //   await Auth().signInWithEmailAndPassword(
-  //     emailController.text.trim(), passwordController.text.trim(),
-  //   );
-  //   Navigator.pop(context);
-  // } on FirebaseAuthException catch (e) {
-  //   Navigator.pop(context);
-  //   if (e.code == 'user-not-found') {
-  //     wrongEmailMessage(context);
-  //   } else if (e.code == 'wrong-password') {
-  //     wrongPasswordMessage(context);
-  //   }
-  // }
+ 
 }
 
 Future<void> signUserUp(BuildContext context, final emailController,

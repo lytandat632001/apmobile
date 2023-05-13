@@ -1,68 +1,102 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get_connect/http/src/status/http_status.dart';
-// import 'package:touch_app/testapi.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:io';
+// // import 'package:flutter/material.dart';
 
-// class Test extends StatefulWidget {
-//   const Test({super.key});
+// // import 'package:provider/provider.dart';
+
+// // import 'package:touch_app/utils/userProvider.dart';
+
+// // class ProductListPage extends StatefulWidget {
+// //   @override
+// //   _ProductListPageState createState() => _ProductListPageState();
+// // }
+
+// // class _ProductListPageState extends State<ProductListPage> {
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     UserProvider userProvider = Provider.of<UserProvider>(context);
+// //     int? userId = userProvider.userId;
+// //     String? token = userProvider.token;
+// //     return Scaffold(
+// //       body: Center(
+// //         child: Column(
+// //           children: [
+// //             Text('${userId}'),
+// //             Text('${token}'),
+// //           ],
+// //         ),
+// //       ),
+// //     );
+// //   }
+// // }
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:provider/provider.dart';
+// import 'package:touch_app/model/product.dart';
+// import 'package:touch_app/utils/userProvider.dart';
+
+// class ProductListPage extends StatefulWidget {
+//   const ProductListPage({super.key});
 
 //   @override
-//   State<Test> createState() => _TestState();
+//   _ProductListPageState createState() => _ProductListPageState();
 // }
 
-// class _TestState extends State<Test> {
-//   late UserAPI userAPI;
-//   bool isDataLoaded = false;
-//   String errorMsg = "";
-//   Future<UserAPI> getDataFromAPI() async {
-//     Uri url = Uri.parse("http://10.0.8.1:8080/api/users");
-//     var response = await http.get(url);
-//     if (response.statusCode == HttpStatus.ok) {
-//       UserAPI userAPI = userAPIFromJson(response.body);
-//       return userAPI;
-//     } else {
-//       errorMsg = '${response.statusCode}:${response.body}';
-//       return UserAPI(data: []);
-//     }
-//   }
+// class _ProductListPageState extends State<ProductListPage> {
+//   dynamic user;
 
-//   assignData() async {
-//     userAPI = await getDataFromAPI();
-//     setState(() {
-//       isDataLoaded = true;
-//     });
+//   Future<void> fetchUsers(int? userID) async {
+//     var apiUrl = 'https://api-datly.phamthanhnam.com/api/users/$userID';
+
+//     try {
+//       var response = await http.get(Uri.parse(apiUrl));
+
+//       if (response.statusCode == 200) {
+//         setState(() {
+//           user = jsonDecode(response.body);
+//         });
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text('Lay thành công')),
+//         );
+//       } else {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+//         );
+//       }
+//     } catch (error) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Đã xảy ra lỗi')),
+//       );
+//     }
 //   }
 
 //   @override
 //   void initState() {
-//     assignData();
 //     super.initState();
+//     UserProvider userProvider =
+//         Provider.of<UserProvider>(context, listen: false);
+//     int? userId = userProvider.userId;
+//     fetchUsers(userId);
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//         body: !isDataLoaded
-//             ? const Center(
-//                 child: CircularProgressIndicator(),
-//               )
-//             : errorMsg.isNotEmpty
-//                 ? Center(
-//                     child: Text(errorMsg),
-//                   )
-//                 : userAPI.data.isEmpty
-//                     ? const Text('No Data')
-//                     : ListView.builder(
-//                         itemBuilder: (context, index) => getMyRow(index),
-//                       ));
-//   }
+//       appBar: AppBar(title: Text('Danh sách sản phẩm')),
+//       // body: ListView.builder(
+//       //   itemCount: user.length,
+//       //   itemBuilder: (context, index) {
+//       //     var product = user[index];
 
-//   Widget getMyRow(int index) {
-//     return Card(
-//       child: ListTile(
-//         title: Text(userAPI.data[index].fullname),
-//       ),
+//       //     return Column(
+//       //       children: [
+//       //         Text(user['email']),
+//       //         // Text('Giá: ${product['price']}'),
+//       //         // Image.asset(user['email']),
+//       //       ],
+//       //     );
+//       //   },
+//       // ),
+//       body: user != null ? Text(user['email']) : Text('Kh lay dc'),
 //     );
 //   }
 // }

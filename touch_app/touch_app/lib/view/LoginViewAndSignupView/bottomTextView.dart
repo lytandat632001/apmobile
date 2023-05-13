@@ -2,14 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/view/login_view.dart';
-import 'package:touch_app/view/signupView.dart';
+import 'package:touch_app/view/HomePage/homePageContent.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/signupcontent.dart';
 
 class BottomTextView extends StatefulWidget {
   const BottomTextView({
     Key? key,
     required this.bottomText1,
-    required this.bottomText2, required this.state,
+    required this.bottomText2,
+    required this.state,
   }) : super(key: key);
   final String bottomText1;
   final String bottomText2;
@@ -20,26 +22,19 @@ class BottomTextView extends StatefulWidget {
 }
 
 class _BottomTextViewState extends State<BottomTextView> {
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // if (!ChangeScreenAnimation.isPlaying) {
-        //   ChangeScreenAnimation.currentScreen == Screens.createAccount
-        //       ? {ChangeScreenAnimation.forward(),}
-        //       : ChangeScreenAnimation.reverse();
-
-        //   ChangeScreenAnimation.currentScreen =
-        //       Screens.values[1 - ChangeScreenAnimation.currentScreen.index];
-        // }
         setState(() {
           if (widget.state == true) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const SignupView()));
+                MaterialPageRoute(builder: (context) => const SignupContent()));
           } else {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LoginView()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const LoginContentNew()));
           }
         });
       },

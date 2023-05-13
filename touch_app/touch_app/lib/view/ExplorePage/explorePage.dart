@@ -1,6 +1,4 @@
 // ignore_for_file: file_names
-
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:touch_app/data/dataProduct.dart';
@@ -9,17 +7,46 @@ import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/details.dart/details.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({super.key, required this.data});
-  final List<Product> data;
+  const ExplorePage({super.key});
+
   @override
   State<ExplorePage> createState() => _ExplorePageState();
 }
 
 class _ExplorePageState extends State<ExplorePage> {
+  //  List<dynamic> products = [];
+
+  // Future<void> fetchProducts() async {
+  //   var apiUrl = 'https://your-api-endpoint.com/products';
+
+  //   try {
+  //     var response = await http.get(Uri.parse(apiUrl));
+
+  //     if (response.statusCode == 200) {
+  //       setState(() {
+  //         products = jsonDecode(response.body);
+  //       });
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Đã xảy ra lỗi')),
+  //     );
+  //   }
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchProducts();
+  // }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    itemsOnExplore = widget.data;
+    // itemsOnExplore = widget.data;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -46,7 +73,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 0.67, crossAxisCount: 2),
                 itemBuilder: (context, index) {
-                  Product current = itemsOnExplore[index];
+                  dynamic current = itemsOnExplore[index];
                   bool containsLike = itemsOnLikes.contains(current);
 
                   return GestureDetector(
@@ -55,7 +82,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                Details(data: clothing[index])),
+                                Details(data: current)),
                       );
                     },
                     child: Column(
@@ -66,12 +93,12 @@ class _ExplorePageState extends State<ExplorePage> {
                           margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(current.image),
+                              image: AssetImage(current['image']),
                             ),
                           ),
                         ),
                         Text(
-                          current.title,
+                          current['title'],
                           style: const TextStyle(
                             color: kColor,
                             fontSize: 18,
@@ -79,7 +106,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                         Text(
-                          '\$${current.priceBase}',
+                          '\$${current['pricebase']}',
                           style: const TextStyle(
                             color: kColor,
                             fontSize: 18,
@@ -87,7 +114,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                         RatingBarIndicator(
-                          rating: current.star,
+                          rating: 4.6,
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.black87,

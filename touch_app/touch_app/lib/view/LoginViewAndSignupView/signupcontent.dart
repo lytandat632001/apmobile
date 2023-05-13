@@ -10,8 +10,6 @@ import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
 
 import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
 
-
-
 class SignupContent extends StatefulWidget {
   const SignupContent({
     Key? key,
@@ -25,6 +23,63 @@ class _SignupContentState extends State<SignupContent> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String? errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    // const currentScreen = Screens.createAccount;
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      body: Stack(
+        children: [
+          const Positioned(
+            top: 60,
+            left: 30,
+            child: TopTextView(
+              title: 'Create\nAccount',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 100),
+            child: Stack(children: <Widget>[
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImputWidget(
+                        hint: 'Email',
+                        hintIcon: closeIcon,
+                        obscureText: false,
+                        controller: _emailController),
+                    ImputWidget(
+                        hint: 'Password',
+                        hintIcon: closeIcon,
+                        obscureText: true,
+                        controller: _passwordController),
+                    LoginButtonWidget(
+                      title: 'Login',
+                      state: false,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                    ),
+                    orDivder(),
+                    logos(),
+                  ]),
+            ]),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: BottomTextView(
+                  bottomText1: 'Already have an account?',
+                  bottomText2: ' Sign Up',
+                  state: false),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget inputField(String hint, Icon hintIcon, bool obscureText, controller) {
     return Padding(
@@ -61,27 +116,27 @@ class _SignupContentState extends State<SignupContent> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
       child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(inputFieldColor),
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            shape: const StadiumBorder(),
-            elevation: 10,
-            shadowColor: const Color(inputFieldColor),
-          ),
-          onPressed: () {
-            child:
-            Text(
-              title,
-              style: const TextStyle(
-                color: kColor,
-                fontSize: 23,
-                fontWeight: FontWeight.w500,
-              ),
-            );
-          }, child: null,
-          //=>  signUserUp(),
-
-          ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(inputFieldColor),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          shape: const StadiumBorder(),
+          elevation: 10,
+          shadowColor: const Color(inputFieldColor),
+        ),
+        onPressed: () {
+          child:
+          Text(
+            title,
+            style: const TextStyle(
+              color: kColor,
+              fontSize: 23,
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        },
+        child: null,
+        //=>  signUserUp(),
+      ),
     );
   }
 
@@ -169,100 +224,10 @@ class _SignupContentState extends State<SignupContent> {
     );
   }
 
-  // Future<void> signUserUp() async {
-  //   try {
-  //     await Auth().signUpWithEmailAndPassword(
-  //         _emailController.text, _passwordController.text);
-  //   } on FirebaseAuthException catch (e) {
-  //     setState(() {
-  //       errorMessage = e.message;
-  //     });
-  //   }
-  // }
-
-  // void signUserIn() async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return const Center(
-  //         child: CircularProgressIndicator(),
-  //       );
-  //     },
-  //   );
-  //   try {
-  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: _emailController.text.trim(),
-  //       password: _passwordController.text.trim(),
-  //     );
-  //     Navigator.pop(context);
-  //   } on FirebaseAuthException catch (e) {
-  //     Navigator.pop(context);
-  //     if (e.code == 'user-not-found') {
-  //       wrongEmailMessage();
-  //     } else if (e.code == 'wrong-password') {
-  //       wrongPasswordMessage();
-  //     }
-  //   }
-  // }
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // const currentScreen = Screens.createAccount;
-    return Stack(
-      children: [
-        const Positioned(
-          top: 60,
-          left: 30,
-          child: TopTextView(
-            title: 'Create\nAccount',
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 100),
-          child: Stack(children: <Widget>[
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ImputWidget(
-                      hint: 'Email',
-                      hintIcon: closeIcon,
-                      obscureText: false,
-                      controller: _emailController),
-                  ImputWidget(
-                      hint: 'Password',
-                      hintIcon: closeIcon,
-                      obscureText: true,
-                      controller: _passwordController),
-                  LoginButtonWidget(
-                    title: 'Login',
-                    state: false,
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                  ),
-                  orDivder(),
-                  logos(),
-                ]),
-          ]),
-        ),
-        const Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 20),
-            child: BottomTextView(
-                bottomText1: 'Already have an account?',
-                bottomText2: ' Sign Up',
-                state: false),
-          ),
-        ),
-      ],
-    );
   }
 }

@@ -14,20 +14,7 @@ class TopTextView extends StatefulWidget {
 }
 
 class _TopTextViewState extends State<TopTextView> {
-  // @override
-  // void initState() {
-  //   ChangeScreenAnimation.topTextAnimation.addStatusListener((status) {
-  //     if (status == AnimationStatus.completed) {
-  //       setState(() {});
-  //     }
-  //   });
-  //   super.initState();
-  // }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {

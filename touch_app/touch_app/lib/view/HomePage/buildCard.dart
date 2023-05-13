@@ -13,7 +13,7 @@ class buildCard extends StatelessWidget {
   });
 
   final Size size;
-  final Product data;
+  final dynamic data;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class buildCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
             image: DecorationImage(
-              image: AssetImage(data.image),
+              image: AssetImage(data['image']),
               fit: BoxFit.cover,
             ),
             boxShadow: const [
@@ -39,23 +39,23 @@ class buildCard extends StatelessWidget {
           ),
         ),
         Text(
-          data.title,
+          data['title'],
           style: const TextStyle(
             color: kColor,
             fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),
-        Text(
-          '\$${data.price}',
-          style: const TextStyle(
-            color: kColor,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        // Text(
+        //   data['description'],
+        //   style: const TextStyle(
+        //     color: kColor,
+        //     fontSize: 18,
+        //     fontWeight: FontWeight.w400,
+        // //   ),
+        // ),
         RatingBarIndicator(
-          rating: data.star,
+          rating: 4.0,
           itemBuilder: (context, index) => const Icon(
             Icons.star,
             color: Colors.black87,

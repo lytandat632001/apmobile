@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:touch_app/data/dataProduct.dart';
-import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
 
@@ -12,13 +11,29 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  double calculateTotalPrice() {
+  int value = 1;
+  void decreasePrice() {
+    setState(() {
+      value -= 1;
+    });
+  }
+
+  void increasePrice() {
+    setState(() {
+      value += 1;
+    });
+  }
+
+  double calculateTotalPrice(int value) {
     double total = 0.0;
     if (itemsOnCart.isEmpty) {
       total = 0;
     } else {
-      for (Product data in itemsOnCart) {
-        total = total + data.priceBase * data.value;
+      for (dynamic data in itemsOnCart) {
+        if (data['priceBase'] is String) {
+          double datas = double.parse(data['priceBase']);
+          total += datas * value;
+        }
       }
     }
     return total;
@@ -42,13 +57,13 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     final size = MediaQuery.of(context).size;
-    void onDelete(Product data) {
+    void onDelete(dynamic data) {
       setState(() {
         if (itemsOnCart.length == 1) {
           itemsOnCart.clear();
         } else {
-          itemsOnCart
-              .removeWhere((element) => element.idProduct == data.idProduct);
+          itemsOnCart.removeWhere(
+              (element) => element['idProduct'] == data['idProduct']);
         }
       });
     }
@@ -85,8 +100,8 @@ class _CartPageState extends State<CartPage> {
                                 width: size.width * 0.35,
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image:
-                                          AssetImage(itemsOnCart[index].image),
+                                      image: AssetImage(
+                                          itemsOnCart[index]['image']),
                                       fit: BoxFit.cover,
                                     ),
                                     boxShadow: const [
@@ -110,7 +125,7 @@ class _CartPageState extends State<CartPage> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            current.title,
+                                            current['title'],
                                             style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w400),
@@ -124,11 +139,11 @@ class _CartPageState extends State<CartPage> {
                                         ],
                                       ),
                                     ),
-                                    Text('₫${current.price}'),
+                                    Text('₫${current['price']}'),
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text('₫${current.priceBase}'),
+                                    Text('₫${current['priceBase']}'),
                                     const SizedBox(
                                       height: 5,
                                     ),
@@ -148,11 +163,11 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                if (current.value > 1) {
-                                                  current.value--;
+                                                if (value > 1) {
+                                                  decreasePrice();
                                                 } else {
                                                   onDelete(current);
-                                                  current.value = 1;
+                                                  value = 1;
                                                 }
                                               });
                                             },
@@ -163,7 +178,7 @@ class _CartPageState extends State<CartPage> {
                                             ),
                                           ),
                                           Text(
-                                            current.value.toString(),
+                                            value.toString(),
                                             style: const TextStyle(
                                                 color: kColor,
                                                 fontWeight: FontWeight.w400,
@@ -172,9 +187,7 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                current.value >= 0
-                                                    ? current.value++
-                                                    : null;
+                                                increasePrice();
                                               });
                                             },
                                             child: const Icon(
@@ -288,7 +301,7 @@ class _CartPageState extends State<CartPage> {
                               color: Colors.black),
                         ),
                         Text(
-                          calculateTotalPrice().toString(),
+                          calculateTotalPrice(value).toString(),
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,

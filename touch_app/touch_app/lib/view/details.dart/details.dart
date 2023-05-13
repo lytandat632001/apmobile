@@ -4,14 +4,14 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get.dart';
+
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
 
 class Details extends StatefulWidget {
   const Details({super.key, required this.data});
-  final Product data;
+  final dynamic data;
 
   @override
   State<Details> createState() => _DetailsState();
@@ -20,9 +20,10 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   int selectedSize = 3;
   // int selectedColor = 0;
+
   @override
   Widget build(BuildContext context) {
-    Product current = widget.data;
+    dynamic current = widget.data;
     bool contains = itemsOnCart.contains(current);
     bool containsLike = itemsOnLikes.contains(current);
     // bool value = containsLike;
@@ -60,13 +61,13 @@ class _DetailsState extends State<Details> {
                 height: size.height * 0.5,
                 child: Stack(children: [
                   Hero(
-                    tag: current.image,
+                    tag: current['image'],
                     child: Container(
                       width: size.width,
                       height: size.height * 0.5,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(current.image),
+                            image: AssetImage(current['image']),
                             fit: BoxFit.cover),
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(30),
@@ -96,7 +97,7 @@ class _DetailsState extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                current.title,
+                                current['title'],
                                 style: const TextStyle(
                                     fontSize: 20,
                                     color: kColor,
@@ -122,31 +123,24 @@ class _DetailsState extends State<Details> {
                         ),
                         Row(
                           children: [
-                            Text('₫${current.price}',
+                            Text('₫${current['price']}',
                                 style: const TextStyle(
                                     fontSize: 20, color: kColor)),
                             const SizedBox(width: 40),
-                            Text(current.category,
+                            Text(current['idCategory'],
                                 style: const TextStyle(
                                     fontSize: 18, color: kColor)),
                             const SizedBox(width: 40),
-                            Text(current.subCategory,
-                                style: const TextStyle(
-                                    fontSize: 19, color: kColor)),
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 20),
                           child: Row(
                             children: [
-                              Text('₫${current.priceBase}',
+                              Text('₫${current['priceBase']}',
                                   style: const TextStyle(
                                       fontSize: 20, color: kColor)),
                               const SizedBox(width: 40),
-                              Text('-${current.voucher}%',
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -233,7 +227,7 @@ class _DetailsState extends State<Details> {
                                     backgroundColor: Colors.transparent,
                                     duration: const Duration(seconds: 3),
                                     content: AwesomeSnackbarContent(
-                                        title: current.title,
+                                        title: current['title'],
                                         message: messageText,
                                         contentType: ContentType.success));
                                 ScaffoldMessenger.of(context)
@@ -243,10 +237,10 @@ class _DetailsState extends State<Details> {
                             child: SizedBox(
                               height: 40,
                               width: size.width * 0.7,
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Text(
                                     'THÊM VÀO GIỎ',
                                     style: TextStyle(
@@ -277,8 +271,7 @@ class _DetailsState extends State<Details> {
                                 ),
                                 SizedBox(
                                   width: size.width * 0.8,
-                                  child: Text(
-                                      '${current.description} ${current.description}',
+                                  child: Text('${current['description']}',
                                       style: const TextStyle(
                                           fontSize: 18,
                                           color: kColor,
@@ -303,14 +296,14 @@ class _DetailsState extends State<Details> {
                                       top: 10, bottom: 10),
                                   child: Row(
                                     children: [
-                                      Text(current.star.toString(),
+                                      Text(current['star'],
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold)),
                                       const SizedBox(
                                         width: 100,
                                       ),
-                                      Text(current.review,
+                                      Text(current['review'],
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold)),
@@ -318,7 +311,7 @@ class _DetailsState extends State<Details> {
                                   ),
                                 ),
                                 RatingBarIndicator(
-                                  rating: current.star,
+                                  rating: 4.5,
                                   itemBuilder: (context, index) => const Icon(
                                     Icons.star,
                                     color: Colors.black87,

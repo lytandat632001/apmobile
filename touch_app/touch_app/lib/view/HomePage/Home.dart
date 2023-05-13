@@ -1,17 +1,17 @@
 // ignore_for_file: file_names, prefer_final_fields
 
-// import 'package:firebase_auth/firebase_auth.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:touch_app/data/dataProduct.dart';
+
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/CartPage/cart.dart';
 import 'package:touch_app/view/ExplorePage/explorePage.dart';
 import 'package:touch_app/view/HomePage/searchCustom.dart';
 import 'package:touch_app/view/LikePage/likePage.dart';
 import 'package:touch_app/view/account/account.dart';
-import 'package:touch_app/view/auth_Page.dart';
 
 import 'homePageContent.dart';
 
@@ -23,26 +23,11 @@ class HomeProduct extends StatefulWidget {
 }
 
 class _HomeProductState extends State<HomeProduct> {
-  // void signOut() async {
-  //   await FirebaseAuth.instance.signOut();
-  //   // ignore: use_build_context_synchronously
-  //   Navigator.pushReplacement(
-  //       context, MaterialPageRoute(builder: (context) => const AuthPage()));
-  // }
-
-  // String check() {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     return user.email.toString();
-  //   } else {
-  //     return 'null';
-  //   }
-  // }
-
+  
   int _index = 0;
-  List<Widget> _widgetScreen = [
-    const HomePageContent(),
-    ExplorePage(data: shoes),
+   List<Widget> _widgetScreen = [
+    HomePageContent(),
+    ExplorePage(),
     const LikePage(),
     const CartPage(),
   ];
@@ -72,7 +57,7 @@ class _HomeProductState extends State<HomeProduct> {
           ),
           IconButton(
             onPressed: () {
-             // signOut();
+              // signOut();
             },
             icon: const Icon(FontAwesomeIcons.bell),
             iconSize: 20,
@@ -80,6 +65,7 @@ class _HomeProductState extends State<HomeProduct> {
           ),
           IconButton(
             onPressed: () {
+              
               Navigator.push(
                 context,
                 MaterialPageRoute(

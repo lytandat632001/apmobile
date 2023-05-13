@@ -18,13 +18,12 @@ class _LikePageState extends State<LikePage> {
   Widget build(BuildContext context) {
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     final size = MediaQuery.of(context).size;
-    void onDelete(Product data) {
+    void onDelete(dynamic data) {
       setState(() {
         if (itemsOnLikes.length == 1) {
           itemsOnLikes.clear();
         } else {
-          itemsOnLikes
-              .removeWhere((element) => element.idProduct == data.idProduct);
+          itemsOnLikes(element) => element['idProduct'] == data['idProduct'];
         }
       });
     }
@@ -45,7 +44,7 @@ class _LikePageState extends State<LikePage> {
                       physics: const BouncingScrollPhysics(),
                       itemCount: itemsOnLikes.length,
                       itemBuilder: (context, index) {
-                        Product current = itemsOnLikes[index];
+                        dynamic current = itemsOnLikes[index];
                         return Container(
                           margin: const EdgeInsets.all(8),
                           // margin: const EdgeInsets.only(top: 8),
@@ -61,8 +60,8 @@ class _LikePageState extends State<LikePage> {
                                 width: size.width * 0.35,
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image:
-                                          AssetImage(itemsOnLikes[index].image),
+                                      image: AssetImage(
+                                          itemsOnLikes[index]['image']),
                                       fit: BoxFit.cover,
                                     ),
                                     boxShadow: const [
@@ -86,7 +85,7 @@ class _LikePageState extends State<LikePage> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            current.title,
+                                            current['title'],
                                             style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w400),
@@ -100,11 +99,11 @@ class _LikePageState extends State<LikePage> {
                                         ],
                                       ),
                                     ),
-                                    Text('₫${current.price}'),
+                                    Text('₫${current['price']}'),
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text('₫${current.priceBase}'),
+                                    Text('₫${current['priceBase']}'),
                                     const SizedBox(
                                       height: 5,
                                     ),
@@ -128,7 +127,7 @@ class _LikePageState extends State<LikePage> {
                                       ),
                                       onPressed: () {
                                         String messageText;
-                                        print(current.title);
+                                        print(current['title']);
 
                                         setState(() {
                                           if (itemsOnCart.contains(current) ==
@@ -147,7 +146,7 @@ class _LikePageState extends State<LikePage> {
                                               duration:
                                                   const Duration(seconds: 3),
                                               content: AwesomeSnackbarContent(
-                                                  title: current.title,
+                                                  title: current['title'],
                                                   message: messageText,
                                                   contentType:
                                                       ContentType.success));

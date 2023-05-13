@@ -1,21 +1,15 @@
-// ignore_for_file: file_names, prefer_typing_uninitialized_variables
+// ignore_for_file: file_names, prefer_typing_uninitialized_variables, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:ffi';
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+// import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:touch_app/a.dart';
-import 'package:touch_app/data/dataProduct.dart';
-import 'package:touch_app/model/user.dart';
-import 'package:touch_app/testapi.dart';
+import 'package:provider/provider.dart';
+import 'package:touch_app/test.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
-import 'logUserIn.dart';
+import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
 
 class LoginButtonWidget extends StatefulWidget {
   const LoginButtonWidget(
@@ -34,71 +28,62 @@ class LoginButtonWidget extends StatefulWidget {
 }
 
 class _LoginButtonWidgetState extends State<LoginButtonWidget> {
-  // late Welcome userAPI;
-  // bool isDataLoaded = false;
-  // String errorMsg = "";
-  // Future<Welcome> getDataFromAPI() async {
-  //   Uri url = Uri.parse(
-  //       "https://api-datly.phamthanhnam.com/api/users/");
-  //   var response = await http.get(url);
-  //   if (response.statusCode == HttpStatus.ok) {
-  //     Welcome userAPI = welcomeFromJson(response.body);
-  //     return userAPI;
-  //   } else {
-  //     errorMsg = '${response.statusCode}:${response.body}';
-  //     return Welcome(data: []);
-  //   }
-  // }
+  Future<void> login(BuildContext context) async {
+    String email = widget.emailController.text;
+    String password = widget.passwordController.text;
 
-  // assignData() async {
-  //   userAPI = await getDataFromAPI();
-  //   setState(() {
-  //     isDataLoaded = true;
-  //   });
-  // }
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/auth/login';
+    var loginData = {'email': email, 'password': password};
+    try {
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(loginData),
+      );
 
-  // @override
-  // void initState() {
-  //   assignData();
-  //   super.initState();
-  // }
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
 
-//API
+        // Lưu thông tin người dùng vào ứng dụng hoặc thực hiện các thao tác khác
+        var userId = responseData['userId'];
+        var token = responseData['token'];
+        UserProvider userProvider =
+            Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUserId(userId);
+        userProvider.setToken(token);
 
-  late List<UserApi> userAPI;
-  late List<UserApi> userAPIemty;
-  bool isDataLoaded = false;
-  String errorMsg = "";
-  static Future<UserApi?> getDataCustomer(String token) async {
-    var response = await http
-        .get(Uri.parse('https://tracking.irace.vn/api/v1/app/users'), headers: {
-      "Accept": "application/json",
-      "content-type": "application/json",
-      'Authorization': 'Bearer ${Get.find<UserApi>()}'
-    });
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đăng nhập thành công')),
+        );
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomeProduct()));
+        // Tạo một đối tượng UserModel và gán giá trị
 
-      return null; //Future<UserApi>.value(UserApi.fromJson(data[]));
+        // Hiển thị thông tin người dùng lên giao diện
+
+        // Tiếp tục xử lý hoặc điều hướng tùy theo kết quả đăng nhập
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đăng nhập thất bại')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
     }
-  }
-
-  assignData() async {
-    userAPI = (getDataCustomer) as List<UserApi>;
-    setState(() {
-      isDataLoaded = true;
-    });
-  }
-
-  @override
-  void initState() {
-    assignData();
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    User user;
+    // UserProvider userProvider = Provider.of<UserProvider>(context);
+    // int? userId = userProvider.userId;
+    // String? token = userProvider.token;
+
+// Sử dụng userId và token trong ứng dụng
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
       child: ElevatedButton(
@@ -110,91 +95,10 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
           shadowColor: const Color(inputFieldColor),
         ),
         onPressed: () {
-          try {
-            userAPI.forEach((element) {
-              for (var element in userAPI) {
-                if (widget.emailController.text.toString().toLowerCase() ==
-                        element.email.toString().toLowerCase() &&
-                    widget.passwordController.text.toString().toLowerCase() ==
-                        element.password.toString().toLowerCase()) {
-                  user = User(
-                      idUser: element.id,
-                      email: element.email.toString(),
-                      password: element.password.toString(),
-                      fullname: element.fullname,
-                      phone: element.phone,
-                      address: element.address);
-                  // user.idUser = 1;
-                  // user.email = element.userName.toString();
-                  // user.password = element.petName.toString();
-                  // user.fullname = "Lý Tấn Đạt";
-                  // user.phone = "0974399560";
-                  userlist.add(user);
-
-                  print(userlist[1].address);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomeProduct()),
-                  );
-                  break;
-                } else {
-                  var snackBar = SnackBar(
-                      backgroundColor: Colors.transparent,
-                      duration: const Duration(seconds: 3),
-                      content: AwesomeSnackbarContent(
-                          title: "Lỗi đăng nhập",
-                          message:
-                              "Email hoặc tài khoản đăng nhập không chính xác",
-                          contentType: ContentType.success));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-                break;
-              }
-            });
-            // for (var element in userAPI) {
-            //   if (widget.emailController.text.toString().toLowerCase() ==
-            //           element..toString().toLowerCase() &&
-            //       widget.passwordController.text.toString().toLowerCase() ==
-            //           element.petName.toString().toLowerCase()) {
-            //     user = User(
-            //         idUser: 1,
-            //         email: element.userName.toString(),
-            //         password: element.petName.toString(),
-            //         fullname: "Lý Tấn Đạt",
-            //         phone: "0974399560",
-            //         address: "Đồng Nai");
-            //     // user.idUser = 1;
-            //     // user.email = element.userName.toString();
-            //     // user.password = element.petName.toString();
-            //     // user.fullname = "Lý Tấn Đạt";
-            //     // user.phone = "0974399560";
-            //     userlist.add(user);
-
-            //     print(userlist[1].address);
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => const HomeProduct()),
-            //     );
-            //     break;
-            //   } else {
-            //     var snackBar = SnackBar(
-            //         backgroundColor: Colors.transparent,
-            //         duration: const Duration(seconds: 3),
-            //         content: AwesomeSnackbarContent(
-            //             title: "Lỗi đăng nhập",
-            //             message:
-            //                 "Email hoặc tài khoản đăng nhập không chính xác",
-            //             contentType: ContentType.success));
-            //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            //   }
-            //   break;
-            // }
-          } catch (e) {
-            print(e.toString());
-          }
+          login(context);
+          // print('User ID: $userId');
+          // print('Token: $token');
         },
-        // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
         child: Text(
           widget.title,
           style: const TextStyle(
