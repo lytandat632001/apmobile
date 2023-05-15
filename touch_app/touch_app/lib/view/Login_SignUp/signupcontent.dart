@@ -4,11 +4,13 @@
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/icons.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/LoginButtonWidget.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/bottomTextView.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
+import 'package:touch_app/view/Login_SignUp/LoginButtonWidget.dart';
+import 'package:touch_app/view/Login_SignUp/bottomTextView.dart';
+import 'package:touch_app/view/Login_SignUp/inputWidget.dart';
+import 'package:http/http.dart' as http;
+import 'package:touch_app/view/Login_SignUp/signupButtonWidget.dart';
 
-import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
+import 'package:touch_app/view/Login_SignUp/topTextView.dart';
 
 class SignupContent extends StatefulWidget {
   const SignupContent({
@@ -20,8 +22,12 @@ class SignupContent extends StatefulWidget {
 }
 
 class _SignupContentState extends State<SignupContent> {
+  final _fullnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+
   String? errorMessage;
 
   @override
@@ -46,6 +52,11 @@ class _SignupContentState extends State<SignupContent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ImputWidget(
+                        hint: 'Họ và tên',
+                        hintIcon: closeIcon,
+                        obscureText: false,
+                        controller: _fullnameController),
+                    ImputWidget(
                         hint: 'Email',
                         hintIcon: closeIcon,
                         obscureText: false,
@@ -55,14 +66,24 @@ class _SignupContentState extends State<SignupContent> {
                         hintIcon: closeIcon,
                         obscureText: true,
                         controller: _passwordController),
-                    LoginButtonWidget(
-                      title: 'Login',
-                      state: false,
+                    ImputWidget(
+                        hint: 'Số điện thoại',
+                        hintIcon: closeIcon,
+                        obscureText: false,
+                        controller: _phoneController),
+                    ImputWidget(
+                        hint: 'Địa chỉ',
+                        hintIcon: closeIcon,
+                        obscureText: false,
+                        controller: _addressController),
+                    SignUpButton(
+                      title: 'Đăng ký',
+                      fullnameController: _fullnameController,
                       emailController: _emailController,
                       passwordController: _passwordController,
+                      phoneController: _phoneController,
+                      addressController: _addressController,
                     ),
-                    orDivder(),
-                    logos(),
                   ]),
             ]),
           ),
@@ -71,8 +92,8 @@ class _SignupContentState extends State<SignupContent> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
               child: BottomTextView(
-                  bottomText1: 'Already have an account?',
-                  bottomText2: ' Sign Up',
+                  bottomText1: 'Bạn đã có  tài khoản?',
+                  bottomText2: ' Đăng nhập',
                   state: false),
             ),
           ),
@@ -112,86 +133,86 @@ class _SignupContentState extends State<SignupContent> {
     );
   }
 
-  Widget loginButton(String title, bool state) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(inputFieldColor),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          shape: const StadiumBorder(),
-          elevation: 10,
-          shadowColor: const Color(inputFieldColor),
-        ),
-        onPressed: () {
-          child:
-          Text(
-            title,
-            style: const TextStyle(
-              color: kColor,
-              fontSize: 23,
-              fontWeight: FontWeight.w500,
-            ),
-          );
-        },
-        child: null,
-        //=>  signUserUp(),
-      ),
-    );
-  }
+  // Widget signupButton(String title, bool state) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
+  //     child: ElevatedButton(
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(inputFieldColor),
+  //         padding: const EdgeInsets.symmetric(vertical: 10),
+  //         shape: const StadiumBorder(),
+  //         elevation: 10,
+  //         shadowColor: const Color(inputFieldColor),
+  //       ),
+  //       onPressed: () {
+  //         child:
+  //         Text(
+  //           title,
+  //           style: const TextStyle(
+  //             color: kColor,
+  //             fontSize: 23,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         );
+  //       },
+  //       child: null,
+  //       //=>  signUserUp(),
+  //     ),
+  //   );
+  // }
 
-  Widget orDivder() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 100),
-      child: Row(
-        children: [
-          Flexible(
-            child: Container(
-              height: 1,
-              color: kPrimaryColor,
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              'or',
-              style: TextStyle(
-                color: kColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          Flexible(
-            child: Container(
-              height: 1,
-              color: kPrimaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget orDivder() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 100),
+  //     child: Row(
+  //       children: [
+  //         Flexible(
+  //           child: Container(
+  //             height: 1,
+  //             color: kPrimaryColor,
+  //           ),
+  //         ),
+  //         const Padding(
+  //           padding: EdgeInsets.symmetric(horizontal: 15),
+  //           child: Text(
+  //             'or',
+  //             style: TextStyle(
+  //               color: kColor,
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //         ),
+  //         Flexible(
+  //           child: Container(
+  //             height: 1,
+  //             color: kPrimaryColor,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget logos() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset('assets/images/google.png', width: 40),
-          const SizedBox(
-            width: 70,
-          ),
-          Image.asset(
-            'assets/images/facebook.png',
-            width: 40,
-          )
-        ],
-      ),
-    );
-  }
+  // Widget logos() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 5),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Image.asset('assets/images/google.png', width: 40),
+  //         const SizedBox(
+  //           width: 70,
+  //         ),
+  //         Image.asset(
+  //           'assets/images/facebook.png',
+  //           width: 40,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget forgotPassword() {
     return TextButton(

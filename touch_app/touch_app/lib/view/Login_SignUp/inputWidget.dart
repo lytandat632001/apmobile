@@ -23,9 +23,9 @@ class ImputWidget extends StatefulWidget {
 class _ImputWidgetState extends State<ImputWidget> {
   @override
   Widget build(BuildContext context) {
-   // String hintText = widget.controller.toString();
+    // String hintText = widget.controller.toString();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
       child: SizedBox(
         height: 55,
         child: Material(
@@ -37,6 +37,7 @@ class _ImputWidgetState extends State<ImputWidget> {
             //   hintText = value;
             //   print(hintText);
             // },
+            
             controller: widget.controller,
             obscureText: widget.obscureText,
             textAlignVertical: TextAlignVertical.bottom,

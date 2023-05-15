@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/HomePage/homePageContent.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/signupcontent.dart';
+import 'package:touch_app/view/Login_SignUp/logincontent.dart';
+import 'package:touch_app/view/Login_SignUp/signupcontent.dart';
 
 class BottomTextView extends StatefulWidget {
   const BottomTextView({

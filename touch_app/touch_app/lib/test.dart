@@ -27,12 +27,14 @@
 // //     );
 // //   }
 // // }
+
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:provider/provider.dart';
 // import 'package:touch_app/model/product.dart';
 // import 'package:touch_app/utils/userProvider.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 
 // class ProductListPage extends StatefulWidget {
 //   const ProductListPage({super.key});
@@ -82,21 +84,25 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(title: Text('Danh sách sản phẩm')),
-//       // body: ListView.builder(
-//       //   itemCount: user.length,
-//       //   itemBuilder: (context, index) {
-//       //     var product = user[index];
-
-//       //     return Column(
-//       //       children: [
-//       //         Text(user['email']),
-//       //         // Text('Giá: ${product['price']}'),
-//       //         // Image.asset(user['email']),
-//       //       ],
-//       //     );
-//       //   },
-//       // ),
-//       body: user != null ? Text(user['email']) : Text('Kh lay dc'),
+//       body: Center(
+//         child: FutureBuilder(
+//           future: loadImageFromFirebaseStorage(),
+//           builder: (context, snapshot) {
+//             if (snapshot.connectionState == ConnectionState.done) {
+//               return Image.network(
+//                   snapshot.data),
+//               return CircularProgressIndicator();
+//             }
+//           },
+//         ),
+//       ),
 //     );
+//   }
+
+//   Future<String> loadImageFromFirebaseStorage() async {
+//     FirebaseStorage storage = FirebaseStorage.instance;
+//     Reference ref = storage.ref().child('path_to_image.jpg');
+//     String url = await ref.getDownloadURL();
+//     return url;
 //   }
 // }

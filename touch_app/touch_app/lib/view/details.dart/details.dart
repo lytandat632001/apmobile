@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:touch_app/data/dataProduct.dart';
-import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
 
 class Details extends StatefulWidget {
@@ -127,7 +126,7 @@ class _DetailsState extends State<Details> {
                                 style: const TextStyle(
                                     fontSize: 20, color: kColor)),
                             const SizedBox(width: 40),
-                            Text(current['idCategory'],
+                            Text(current['nameCategory'],
                                 style: const TextStyle(
                                     fontSize: 18, color: kColor)),
                             const SizedBox(width: 40),
@@ -281,46 +280,42 @@ class _DetailsState extends State<Details> {
                             )),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: SizedBox(
-                            width: size.width,
-                            height: size.height * 0.15,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('XẾP HẠNG & ĐÁNH GIÁ',
-                                    style: TextStyle(
-                                        fontSize: 23,
-                                        fontWeight: FontWeight.bold)),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10),
-                                  child: Row(
-                                    children: [
-                                      Text(current['star'],
-                                          style: const TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold)),
-                                      const SizedBox(
-                                        width: 100,
-                                      ),
-                                      Text(current['review'],
-                                          style: const TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('XẾP HẠNG & ĐÁNH GIÁ',
+                                  style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold)),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Row(
+                                  children: [
+                                    Text(current['star'],
+                                        style: const TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold)),
+                                    const SizedBox(
+                                      width: 100,
+                                    ),
+                                    Text(current['review'],
+                                        style: const TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
                                 ),
-                                RatingBarIndicator(
-                                  rating: 4.5,
-                                  itemBuilder: (context, index) => const Icon(
-                                    Icons.star,
-                                    color: Colors.black87,
-                                  ),
-                                  itemCount: 5,
-                                  itemSize: 30,
-                                )
-                              ],
-                            ),
+                              ),
+                              RatingBarIndicator(
+                                rating: 4.5,
+                                itemBuilder: (context, index) => const Icon(
+                                  Icons.star,
+                                  color: Colors.black87,
+                                ),
+                                itemCount: 5,
+                                itemSize: 30,
+                              ),
+                            ],
                           ),
                         ),
                       ]),

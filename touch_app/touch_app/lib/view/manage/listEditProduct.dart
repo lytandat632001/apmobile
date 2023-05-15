@@ -6,16 +6,18 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:http/http.dart' as http;
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/view/Login_SignUp/logincontent.dart';
 import 'package:touch_app/view/details.dart/details.dart';
+import 'package:touch_app/view/manage/editProductPage.dart';
 
-class ExplorePage extends StatefulWidget {
-  const ExplorePage({super.key});
+class ListEditProduct extends StatefulWidget {
+  const ListEditProduct({super.key});
 
   @override
-  State<ExplorePage> createState() => _ExplorePageState();
+  State<ListEditProduct> createState() => _ListEditProductState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ListEditProductState extends State<ListEditProduct> {
   List<dynamic> products = [];
 
   Future<void> fetchProducts() async {
@@ -47,29 +49,52 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    fetchProducts();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     // itemsOnExplore = widget.data;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kBackgroundColor,
+        elevation: 0.5,
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back_ios_new,
+              color: kColor,
+            )),
+        title: Text(
+          'DANH SÁCH SẢN PHẨM',
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: kColor),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginContentNew(),
+                    ));
+              },
+              icon: Icon(
+                Icons.close,
+                color: kColor,
+              ))
+        ],
+      ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Center(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Tìm kiếm sản phẩm',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: kColor,
-                    size: 30,
-                  ),
-                ),
-              ),
-            ),
             SizedBox(
               width: size.width,
-              height: size.height * 0.7,
+              height: size.height,
               child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: products.length,
@@ -84,7 +109,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Details(data: current)),
+                            builder: (context) =>
+                                EditProductPage(data: current)),
                       );
                     },
                     child: Column(

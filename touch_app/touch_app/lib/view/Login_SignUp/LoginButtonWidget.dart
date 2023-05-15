@@ -5,21 +5,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:touch_app/test.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
+import 'package:touch_app/view/manage/managerController.dart';
 
 class LoginButtonWidget extends StatefulWidget {
   const LoginButtonWidget(
       {super.key,
       required this.title,
-      required this.state,
       this.emailController,
       this.passwordController});
   final String title;
-  final bool state;
+
   final emailController;
   final passwordController;
 
@@ -31,6 +29,7 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
   Future<void> login(BuildContext context) async {
     String email = widget.emailController.text;
     String password = widget.passwordController.text;
+    dynamic idManager = 11;
 
     var apiUrl = 'https://api-datly.phamthanhnam.com/api/auth/login';
     var loginData = {'email': email, 'password': password};
@@ -51,14 +50,24 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
             Provider.of<UserProvider>(context, listen: false);
         userProvider.setUserId(userId);
         userProvider.setToken(token);
+        print(userId);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Đăng nhập thành công')),
         );
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => const HomeProduct()));
+        if (userId == idManager) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const ManagerController()));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const HomeProduct()));
+        }
+
         // Tạo một đối tượng UserModel và gán giá trị
 
         // Hiển thị thông tin người dùng lên giao diện
@@ -96,8 +105,6 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
         ),
         onPressed: () {
           login(context);
-          // print('User ID: $userId');
-          // print('Token: $token');
         },
         child: Text(
           widget.title,

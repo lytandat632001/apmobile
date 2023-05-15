@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/view/manage/addProduct.dart';
+import 'package:touch_app/view/manage/editUserPage.dart';
+import 'package:touch_app/view/manage/listEditProduct.dart';
 
-class productManage extends StatefulWidget {
-  const productManage({super.key});
+class ManagerController extends StatefulWidget {
+  const ManagerController({super.key});
 
   @override
-  State<productManage> createState() => _productManageState();
+  State<ManagerController> createState() => _ManagerControllerState();
 }
 
-class _productManageState extends State<productManage> {
+class _ManagerControllerState extends State<ManagerController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -23,7 +26,13 @@ class _productManageState extends State<productManage> {
                 width: size.width * 0.5,
                 color: Colors.blue,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const AddProduct()));
+                    },
                     child: Text(
                       'Thêm sản phẩm',
                       style: TextStyle(
@@ -36,7 +45,13 @@ class _productManageState extends State<productManage> {
                 width: size.width * 0.5,
                 color: Colors.blue,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const ListEditProduct()));
+                    },
                     child: Text(
                       'Quản lý sản phẩm',
                       style: TextStyle(
@@ -49,7 +64,13 @@ class _productManageState extends State<productManage> {
                 width: size.width * 0.5,
                 color: Colors.blue,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const EditUserPage()));
+                    },
                     child: Text(
                       'Quản lý người dùng',
                       style: TextStyle(

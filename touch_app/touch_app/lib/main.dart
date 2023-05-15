@@ -4,7 +4,13 @@ import 'package:touch_app/test.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
+import 'package:touch_app/view/Login_SignUp/logincontent.dart';
+import 'package:touch_app/view/Login_SignUp/signupcontent.dart';
+import 'package:touch_app/view/account/account.dart';
+import 'package:touch_app/view/manage/managerController.dart';
 import 'package:touch_app/view/splash_view.dart';
+
+import 'view/manage/addProduct.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(

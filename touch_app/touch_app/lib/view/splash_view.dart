@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/logincontent.dart';
+import 'package:touch_app/view/Login_SignUp/logincontent.dart';
 
 class SplashView extends StatelessWidget {
   const SplashView({super.key});

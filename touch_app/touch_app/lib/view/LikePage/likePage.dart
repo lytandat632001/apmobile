@@ -231,29 +231,7 @@ class _LikePageState extends State<LikePage> {
                                   MaterialPageRoute(
                                     builder: (context) => const HomeProduct(),
                                   ));
-                              //  String messageText;
-                              // setState(() {
-                              //   // AddToCart.addToCart(current, context);
-
-                              //   if (contains == true) {
-                              //     messageText =
-                              //         "Sản phẩm đã tồn tại trong giỏ hàng!";
-                              //   } else {
-                              //     itemsOnCart.add(current);
-                              //     messageText =
-                              //         "Sản phẩm đã được thêm vào giỏ hàng!";
-                              //   }
-
-                              //   var snackBar = SnackBar(
-                              //       backgroundColor: Colors.transparent,
-                              //       duration: const Duration(seconds: 3),
-                              //       content: AwesomeSnackbarContent(
-                              //           title: current.title,
-                              //           message: messageText,
-                              //           contentType: ContentType.success));
-                              //   ScaffoldMessenger.of(context)
-                              //       .showSnackBar(snackBar);
-                              // });
+                             
                             },
                             child: SizedBox(
                               height: 40,

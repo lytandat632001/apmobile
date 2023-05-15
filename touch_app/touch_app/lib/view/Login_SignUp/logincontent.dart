@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 
 import 'package:touch_app/utils/icons.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/LoginButtonWidget.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/bottomTextView.dart';
-import 'package:touch_app/view/LoginViewAndSignupView/inputWidget.dart';
+import 'package:touch_app/view/Login_SignUp/LoginButtonWidget.dart';
+import 'package:touch_app/view/Login_SignUp/bottomTextView.dart';
+import 'package:touch_app/view/Login_SignUp/inputWidget.dart';
 
-import 'package:touch_app/view/LoginViewAndSignupView/topTextView.dart';
+import 'package:touch_app/view/Login_SignUp/topTextView.dart';
 
 // import 'package:touch_app/view/auth.dart';
 
@@ -81,7 +81,7 @@ class _LoginContentNewState extends State<LoginContentNew> {
                         controller: _passwordController),
                     LoginButtonWidget(
                       title: 'Log In',
-                      state: true,
+                 
                       emailController: _emailController,
                       passwordController: _passwordController,
                     ),
@@ -94,8 +94,8 @@ class _LoginContentNewState extends State<LoginContentNew> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
               child: BottomTextView(
-                bottomText1: 'Don\'t have an account?',
-                bottomText2: ' Sign Up',
+                bottomText1: 'Bạn chưa có tài khoản?',
+                bottomText2: ' Đăng ký',
                 state: true,
               ),
             ),

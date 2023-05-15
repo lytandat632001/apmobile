@@ -17,6 +17,7 @@ dependencies:
   favorite_button: ^0.0.4
   # firebase_auth: ^4.4.0
 
+  firebase_storage: ^11.2.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2

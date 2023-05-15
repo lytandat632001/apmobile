@@ -9,68 +9,38 @@ import 'package:touch_app/utils/userProvider.dart';
 
 import '../Login_SignUp/inputWidget.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+class EditUser extends StatefulWidget {
+  const EditUser({
+    super.key,
+    required this.data,
+  });
+  final dynamic data;
 
   @override
-  State<AccountPage> createState() => _AccountPageState();
+  State<EditUser> createState() => _EditUserState();
 }
 
-class _AccountPageState extends State<AccountPage> {
-  dynamic user;
-
-  Future<void> fetchUsers(int? userID) async {
-    var apiUrl = 'https://api-datly.phamthanhnam.com/api/users/$userID';
-
-    try {
-      var response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        setState(() {
-          user = jsonDecode(response.body);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Lay thành công')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
-        );
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã xảy ra lỗi')),
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-    int? userId = userProvider.userId;
-    fetchUsers(userId);
-  }
-
+class _EditUserState extends State<EditUser> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final _fullnameController = TextEditingController();
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
-    String passwordCurrcent = user != null ? user['password'] : '';
+    String passwordCurrcent =
+        widget.data != null ? widget.data['password'] : '';
     final _phoneController = TextEditingController();
     final _addressController = TextEditingController();
-    _fullnameController.text = user != null ? user['fullname'] : '';
-    _emailController.text = user != null ? user['email'] : '';
-    _phoneController.text = user != null ? user['phone'] : '';
-    _addressController.text = user != null ? user['address'] : '';
+    _fullnameController.text =
+        widget.data != null ? widget.data['fullname'] : '';
+    _emailController.text = widget.data != null ? widget.data['email'] : '';
+    _phoneController.text = widget.data != null ? widget.data['phone'] : '';
+    _addressController.text = widget.data != null ? widget.data['address'] : '';
 
-    Future<void> updateUserData() async {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final userId = userProvider.userId;
-      final token = userProvider.token;
+    Future<void> updateUserData(userId) async {
+      // final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // final userId = userProvider.userId;
+      // final token = userProvider.token;
 
       final url = 'https://api-datly.phamthanhnam.com/api/users/$userId';
 
@@ -84,7 +54,6 @@ class _AccountPageState extends State<AccountPage> {
 
       final headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       };
 
       try {
@@ -110,43 +79,40 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
 
-    Future<void> ChangePassword() async {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final userId = userProvider.userId;
-      final token = userProvider.token;
+    // Future<void> ChangePassword() async {
 
-      final url =
-          'https://api-datly.phamthanhnam.com/api/users/$userId/$passwordCurrcent';
+    //   final url =
+    //       'https://api-datly.phamthanhnam.com/api/users/$userId/$passwordCurrcent';
 
-      final body = {'password': passwordCurrcent};
+    //   final body = {'password': passwordCurrcent};
 
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    //   final headers = {
+    //     'Content-Type': 'application/json',
 
-      try {
-        final response = await http.put(
-          Uri.parse(url),
-          headers: headers,
-          body: jsonEncode(body),
-        );
+    //   };
 
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cập nhật thành công')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
-          );
-        }
-      } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã xảy ra lỗi')),
-        );
-      }
-    }
+    //   try {
+    //     final response = await http.put(
+    //       Uri.parse(url),
+    //       headers: headers,
+    //       body: jsonEncode(body),
+    //     );
+
+    //     if (response.statusCode == 200) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(content: Text('Cập nhật thành công')),
+    //       );
+    //     } else {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
+    //       );
+    //     }
+    //   } catch (error) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text('Đã xảy ra lỗi')),
+    //     );
+    //   }
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -176,7 +142,7 @@ class _AccountPageState extends State<AccountPage> {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              Text(user != null ? user['email'] : 'Kh lay dc',
+              Text(widget.data != null ? widget.data['email'] : 'Kh lay dc',
                   style: const TextStyle(color: kColor, fontSize: 22)),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0, bottom: 20),
@@ -207,12 +173,16 @@ class _AccountPageState extends State<AccountPage> {
                             fontWeight: FontWeight.w400),
                       ),
                       ImputWidget(
-                          hint: user != null ? user['fullname'] : "fullname",
+                          hint: widget.data != null
+                              ? widget.data['fullname']
+                              : "fullname",
                           hintIcon: closeIcon,
                           obscureText: false,
                           controller: _fullnameController),
                       ImputWidget(
-                          hint: user != null ? user['email'] : "email",
+                          hint: widget.data != null
+                              ? widget.data['email']
+                              : "email",
                           hintIcon: closeIcon,
                           obscureText: false,
                           controller: _emailController),
@@ -222,12 +192,16 @@ class _AccountPageState extends State<AccountPage> {
                       //     obscureText: false,
                       //     controller: _passwordController),
                       ImputWidget(
-                          hint: user != null ? user['phone'] : "phone",
+                          hint: widget.data != null
+                              ? widget.data['phone']
+                              : "phone",
                           hintIcon: closeIcon,
                           obscureText: false,
                           controller: _phoneController),
                       ImputWidget(
-                          hint: user != null ? user['address'] : "address",
+                          hint: widget.data != null
+                              ? widget.data['address']
+                              : "address",
                           hintIcon: closeIcon,
                           obscureText: false,
                           controller: _addressController),
@@ -240,7 +214,7 @@ class _AccountPageState extends State<AccountPage> {
                           shadowColor: const Color(inputFieldColor),
                         ),
                         onPressed: () {
-                          updateUserData();
+                          updateUserData(widget.data['id']);
                         },
                         // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                         child: const Text(
@@ -271,7 +245,7 @@ class _AccountPageState extends State<AccountPage> {
                                 shadowColor: const Color(inputFieldColor),
                               ),
                               onPressed: () {
-                                ChangePassword();
+                                //    ChangePassword();
                               },
                               // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                               child: const Text(
