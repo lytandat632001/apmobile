@@ -1,32 +1,32 @@
-// // import 'package:flutter/material.dart';
+// // // import 'package:flutter/material.dart';
 
-// // import 'package:provider/provider.dart';
+// // // import 'package:provider/provider.dart';
 
-// // import 'package:touch_app/utils/userProvider.dart';
+// // // import 'package:touch_app/utils/userProvider.dart';
 
-// // class ProductListPage extends StatefulWidget {
-// //   @override
-// //   _ProductListPageState createState() => _ProductListPageState();
-// // }
+// // // class ProductListPage extends StatefulWidget {
+// // //   @override
+// // //   _ProductListPageState createState() => _ProductListPageState();
+// // // }
 
-// // class _ProductListPageState extends State<ProductListPage> {
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     UserProvider userProvider = Provider.of<UserProvider>(context);
-// //     int? userId = userProvider.userId;
-// //     String? token = userProvider.token;
-// //     return Scaffold(
-// //       body: Center(
-// //         child: Column(
-// //           children: [
-// //             Text('${userId}'),
-// //             Text('${token}'),
-// //           ],
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
+// // // class _ProductListPageState extends State<ProductListPage> {
+// // //   @override
+// // //   Widget build(BuildContext context) {
+// // //     UserProvider userProvider = Provider.of<UserProvider>(context);
+// // //     int? userId = userProvider.userId;
+// // //     String? token = userProvider.token;
+// // //     return Scaffold(
+// // //       body: Center(
+// // //         child: Column(
+// // //           children: [
+// // //             Text('${userId}'),
+// // //             Text('${token}'),
+// // //           ],
+// // //         ),
+// // //       ),
+// // //     );
+// // //   }
+// // // }
 
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
@@ -34,7 +34,6 @@
 // import 'package:provider/provider.dart';
 // import 'package:touch_app/model/product.dart';
 // import 'package:touch_app/utils/userProvider.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
 
 // class ProductListPage extends StatefulWidget {
 //   const ProductListPage({super.key});
@@ -44,65 +43,47 @@
 // }
 
 // class _ProductListPageState extends State<ProductListPage> {
-//   dynamic user;
+//   final List<dynamic> productList = [
+//     'Apple',
+//     'Banana',
+//     'Orange',
+//     'Grapes',
+//     'Mango',
+//   ];
 
-//   Future<void> fetchUsers(int? userID) async {
-//     var apiUrl = 'https://api-datly.phamthanhnam.com/api/users/$userID';
+//   List<dynamic> searchProducts(List<dynamic> productList, String searchTerm) {
+//     List<dynamic> results = [];
 
-//     try {
-//       var response = await http.get(Uri.parse(apiUrl));
-
-//       if (response.statusCode == 200) {
-//         setState(() {
-//           user = jsonDecode(response.body);
-//         });
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(content: Text('Lay thành công')),
-//         );
-//       } else {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
-//         );
+//     for (var product in productList) {
+//       if (product.toString().toLowerCase().contains(searchTerm.toLowerCase())) {
+//         results.add(product);
 //       }
-//     } catch (error) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Đã xảy ra lỗi')),
-//       );
 //     }
-//   }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     UserProvider userProvider =
-//         Provider.of<UserProvider>(context, listen: false);
-//     int? userId = userProvider.userId;
-//     fetchUsers(userId);
+//     return results;
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Danh sách sản phẩm')),
-//       body: Center(
-//         child: FutureBuilder(
-//           future: loadImageFromFirebaseStorage(),
-//           builder: (context, snapshot) {
-//             if (snapshot.connectionState == ConnectionState.done) {
-//               return Image.network(
-//                   snapshot.data),
-//               return CircularProgressIndicator();
-//             }
-//           },
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Product Search'),
+//         ),
+//         body: Column(
+//           children: [
+//             SearchBar(
+//               onChanged: (searchTerm) {
+//                 List<dynamic> searchResults =
+//                     searchProducts(productList, searchTerm);
+//                 // Xử lý kết quả tìm kiếm ở đây (hiển thị, cập nhật UI, vv.)
+//                 print(searchResults);
+//               },
+//             ),
+//             // Các widget khác trong body...
+//           ],
 //         ),
 //       ),
 //     );
-//   }
-
-//   Future<String> loadImageFromFirebaseStorage() async {
-//     FirebaseStorage storage = FirebaseStorage.instance;
-//     Reference ref = storage.ref().child('path_to_image.jpg');
-//     String url = await ref.getDownloadURL();
-//     return url;
 //   }
 // }

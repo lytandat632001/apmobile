@@ -1,30 +1,113 @@
+import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/utils/userProvider.dart';
+import 'package:touch_app/view/details.dart/IconFavorite.dart';
 
 class Details extends StatefulWidget {
-  const Details({super.key, required this.data});
+  const Details({super.key, required this.data, required this.like});
   final dynamic data;
+  final bool like;
 
   @override
   State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
-  int selectedSize = 3;
-  // int selectedColor = 0;
+  // bool likeCheck = false;
 
+  // ValueNotifier<bool> likeNotifier = ValueNotifier<bool>(false);
+  // List<dynamic> likes = [];
+  // List<dynamic> likeIdUser = [];
+
+  // bool like = false;
+  // Future<void> fetchLike(BuildContext context) async {
+  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
+  //   final userId = userProvider.userId;
+  //   final token = userProvider.token;
+  //   var apiUrl = 'https://api-datly.phamthanhnam.com/api/like/';
+
+  //   try {
+  //     var response = await http.get(Uri.parse(apiUrl));
+
+  //     if (response.statusCode == 200) {
+  //       setState(() {
+  //         likes = jsonDecode(response.body);
+  //         print(likes);
+  //         likeIdUser = likes
+  //             .where((like) =>
+  //                 like['idUser'] == userId &&
+  //                 like['idProduct'] == widget.data['idProduct'])
+  //             .toList();
+  //         print(likeIdUser);
+  //         if (likeIdUser.isNotEmpty) {
+  //           like = true;
+  //         } else {
+  //           like = false;
+  //         }
+  //         print(like);
+  //       });
+
+  //       // setState(() {
+  //       //   if (likeIdUser.isNotEmpty) {
+  //       //     print(likeIdUser);
+  //       //     like = true;
+  //       //   } else {
+  //       //     like = false;
+  //       //     print(likeIdUser);
+  //       //   }
+  //       // });
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+  //       );
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Đã xảy ra lỗi')),
+  //     );
+  //   }
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchLike(context);
+  //   // print("............................");
+  //   // print(widget.data);
+  //   // print(like);
+  //   // fetchLike(context);
+  //   // print(widget.data);
+  //   // print(like);
+  // }
+
+  int selectedSize = 3;
   @override
   Widget build(BuildContext context) {
+    // print('likeIdUser: $likeIdUser');
+    // print('likeNotifier: ${likeNotifier.value}');
+    bool likeornot = widget.like;
+    print(likeornot);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.userId;
+    final token = userProvider.token;
     dynamic current = widget.data;
     bool contains = itemsOnCart.contains(current);
     bool containsLike = itemsOnLikes.contains(current);
+
     // bool value = containsLike;
 
     final size = MediaQuery.of(context).size;
@@ -102,20 +185,8 @@ class _DetailsState extends State<Details> {
                                     color: kColor,
                                     fontWeight: FontWeight.bold),
                               ),
-                              FavoriteButton(
-                                iconSize: 45,
-                                valueChanged: (value) {
-                                  setState(() {
-                                    if (containsLike == true) {
-                                      value = false;
-                                    } else {
-                                      itemsOnLikes.add(current);
-                                      value = true;
-                                    }
-                                  });
-                                },
-                                isFavorite: false,
-                                iconColor: Colors.blue,
+                              FavoriteIcon(
+                                widget.like,
                               ),
                             ],
                           ),
@@ -159,6 +230,13 @@ class _DetailsState extends State<Details> {
                                     onTap: () {
                                       setState(() {
                                         selectedSize = index;
+                                        // print(userId);
+                                        // print(widget.data['idProduct']);
+                                        // print(likes);
+                                        // print(likeIdUser);
+                                        // print(stateLike);
+                                        //   fetchLike(
+                                        //       userId, widget.data['idProduct']);
                                       });
                                     },
                                     child: Padding(

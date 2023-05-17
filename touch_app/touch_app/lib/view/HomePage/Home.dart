@@ -2,10 +2,12 @@
 
 
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
+import 'package:http/http.dart'as http;
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/CartPage/cart.dart';
 import 'package:touch_app/view/ExplorePage/explorePage.dart';
@@ -23,7 +25,36 @@ class HomeProduct extends StatefulWidget {
 }
 
 class _HomeProductState extends State<HomeProduct> {
-  
+ List<dynamic> products = [];
+  Future<void> fetchProducts() async {
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/products/';
+
+    try {
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          products = jsonDecode(response.body);
+        });
+        print(products);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
+
   int _index = 0;
    List<Widget> _widgetScreen = [
     HomePageContent(),
@@ -49,7 +80,7 @@ class _HomeProductState extends State<HomeProduct> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: SearchCustom());
+              showSearch(context: context, delegate: SearchCustom(products));
             },
             icon: const Icon(FontAwesomeIcons.magnifyingGlass),
             iconSize: 20,

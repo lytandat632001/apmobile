@@ -84,7 +84,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Details(data: current)),
+                            builder: (context) => Details(data: current,like: true,)),
                       );
                     },
                     child: Column(

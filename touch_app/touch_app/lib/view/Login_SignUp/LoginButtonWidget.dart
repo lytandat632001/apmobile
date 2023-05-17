@@ -42,7 +42,7 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-
+ 
         // Lưu thông tin người dùng vào ứng dụng hoặc thực hiện các thao tác khác
         var userId = responseData['userId'];
         var token = responseData['token'];

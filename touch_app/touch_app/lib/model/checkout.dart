@@ -14,4 +14,7 @@ class checkout {
     required this.type,
     required this.idCart,
   });
+  //Lấy tất cả danh sách thanh toán 
+  // Thêm Iduser, idStatus và nameStatus để kiểm tra tình trạng đơn hàng
+  // và để biết đơn hàng của user nào
 }

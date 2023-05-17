@@ -6,8 +6,9 @@ import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:touch_app/model/product.dart';
+import 'package:provider/provider.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/ExplorePage/explorePage.dart';
 import 'package:touch_app/view/details.dart/details.dart';
 
@@ -28,10 +29,53 @@ class _HomePageContentState extends State<HomePageContent> {
   List<dynamic> women = [];
   List<dynamic> children = [];
   List<dynamic> accessories = [];
+  List<dynamic> likes = [];
+  List<dynamic> likeIdUser = [];
+  bool like = false;
+  List<dynamic> b = [];
+
+  Future<void> fetchLike() async {
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/like/';
+
+    try {
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          likes = jsonDecode(response.body);
+          likeIdUser = likes;
+          // likeIdUser = likes
+          //     .where((like) =>
+          //         like['idUser'] == userId &&
+          //         like['idProduct'] == data['idProduct'])
+          //     .toList();
+
+          // setState(() {
+          //   if (likeIdUser.isNotEmpty) {
+          //     like = true;
+          //   } else {
+          //     like = false;
+          //   }
+          // });
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
 
   Future<void> fetchProducts() async {
     var apiUrl = 'https://api-datly.phamthanhnam.com/api/products/';
-
     try {
       var response = await http.get(Uri.parse(apiUrl));
 
@@ -39,7 +83,6 @@ class _HomePageContentState extends State<HomePageContent> {
         setState(() {
           products = jsonDecode(response.body);
         });
-        print(products);
 
         men = products.where((product) => product['idCategory'] == 1).toList();
         women =
@@ -48,7 +91,6 @@ class _HomePageContentState extends State<HomePageContent> {
             products.where((product) => product['idCategory'] == 3).toList();
         accessories =
             products.where((product) => product['idCategory'] == 4).toList();
-        print(men);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
@@ -65,19 +107,23 @@ class _HomePageContentState extends State<HomePageContent> {
   void initState() {
     super.initState();
     fetchProducts();
+    fetchLike();
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.userId;
+    final token = userProvider.token;
     final size = MediaQuery.of(context).size;
     late PageController _controllerMen =
-        PageController(initialPage: 1, viewportFraction: 0.7);
+        PageController(initialPage: 2, viewportFraction: 0.7);
     late PageController _controllerWomen =
-        PageController(initialPage: 1, viewportFraction: 0.7);
+        PageController(initialPage: 2, viewportFraction: 0.7);
     late PageController _controllerChildren =
-        PageController(initialPage: 1, viewportFraction: 0.7);
+        PageController(initialPage: 2, viewportFraction: 0.7);
     late PageController _controllerAccessories =
-        PageController(initialPage: 1, viewportFraction: 0.7);
+        PageController(initialPage: 2, viewportFraction: 0.7);
 
     bool isFavorite = false;
     List<bool> temp = [true, false, false];
@@ -148,12 +194,39 @@ class _HomePageContentState extends State<HomePageContent> {
                           var data = men[index];
                           return GestureDetector(
                             onTap: () {
-                              print('$data[title]');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(data: data)),
-                              );
+                              b = likeIdUser
+                                  .where((like) =>
+                                      like['idUser'] == userId &&
+                                      like['idProduct'] == data['idProduct'])
+                                  .toList();
+                              // fetchLike(context);
+                              print(b);
+                              if (b.length > 0) {
+                                setState(() {
+                                  like = true;
+                                  print(like);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Details(
+                                              data: data,
+                                              like: like,
+                                            )),
+                                  );
+                                });
+                                print(b);
+                                print(like);
+                              } else {
+                                like = false;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Details(
+                                            data: data,
+                                            like: like,
+                                          )),
+                                );
+                              }
                             },
                             child: view(index, size, _controllerMen, data),
                           );
@@ -221,7 +294,10 @@ class _HomePageContentState extends State<HomePageContent> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Details(data: data)),
+                                    builder: (context) => Details(
+                                          data: data,
+                                          like: likeIdUser.isNotEmpty,
+                                        )),
                               );
                             },
                             child: view(index, size, _controllerWomen, data),
@@ -290,8 +366,10 @@ class _HomePageContentState extends State<HomePageContent> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(data: data)),
+                                      builder: (context) => Details(
+                                            data: data,
+                                            like: like,
+                                          )),
                                 );
                               },
                               child:
@@ -360,8 +438,10 @@ class _HomePageContentState extends State<HomePageContent> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(data: data)),
+                                      builder: (context) => Details(
+                                            like: like,
+                                            data: data,
+                                          )),
                                 );
                               },
                               child: view(

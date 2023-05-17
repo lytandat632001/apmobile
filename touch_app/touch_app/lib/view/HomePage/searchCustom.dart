@@ -1,14 +1,11 @@
-// ignore_for_file: file_names
+
 
 import 'package:flutter/material.dart';
 import 'package:touch_app/utils/constants.dart';
 
 class SearchCustom extends SearchDelegate {
-  List<String> history = [
-    'Clothing',
-    'Sport',
-    'Hat',
-  ];
+  List<dynamic> products;
+  SearchCustom(this.products);
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -38,7 +35,6 @@ class SearchCustom extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-
     return Center(
       child: Text(
         query,
@@ -49,16 +45,15 @@ class SearchCustom extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-  
-    List<String> historyTemp = history.where((history) {
-      final result = history.toLowerCase();
+    List<dynamic> productSearch = products.where((history) {
+      final result = products.toString().toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
     }).toList();
 
     return ListView.builder(
       itemBuilder: (context, index) {
-        final shistory = historyTemp[index];
+        final shistory = productSearch[index];
         return ListTile(
           title: Text(shistory),
           onTap: () {
@@ -67,7 +62,7 @@ class SearchCustom extends SearchDelegate {
           },
         );
       },
-      itemCount: historyTemp.length,
+      itemCount: productSearch.length,
     );
   }
 }
