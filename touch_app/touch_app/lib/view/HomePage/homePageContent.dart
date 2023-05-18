@@ -29,50 +29,6 @@ class _HomePageContentState extends State<HomePageContent> {
   List<dynamic> women = [];
   List<dynamic> children = [];
   List<dynamic> accessories = [];
-  List<dynamic> likes = [];
-  List<dynamic> likeIdUser = [];
-  bool like = false;
-  List<dynamic> b = [];
-
-  Future<void> fetchLike() async {
-    var apiUrl = 'https://api-datly.phamthanhnam.com/api/like/';
-
-    try {
-      var response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        setState(() {
-          likes = jsonDecode(response.body);
-          likeIdUser = likes;
-          // likeIdUser = likes
-          //     .where((like) =>
-          //         like['idUser'] == userId &&
-          //         like['idProduct'] == data['idProduct'])
-          //     .toList();
-
-          // setState(() {
-          //   if (likeIdUser.isNotEmpty) {
-          //     like = true;
-          //   } else {
-          //     like = false;
-          //   }
-          // });
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
-        );
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã xảy ra lỗi')),
-      );
-    }
-  }
 
   Future<void> fetchProducts() async {
     var apiUrl = 'https://api-datly.phamthanhnam.com/api/products/';
@@ -107,7 +63,6 @@ class _HomePageContentState extends State<HomePageContent> {
   void initState() {
     super.initState();
     fetchProducts();
-    fetchLike();
   }
 
   @override
@@ -124,14 +79,6 @@ class _HomePageContentState extends State<HomePageContent> {
         PageController(initialPage: 2, viewportFraction: 0.7);
     late PageController _controllerAccessories =
         PageController(initialPage: 2, viewportFraction: 0.7);
-
-    bool isFavorite = false;
-    List<bool> temp = [true, false, false];
-    int selected = 0;
-    List<String> tags = [];
-    List<String> options = ["Nữ", "Nam", "Trẻ em"];
-    String? _selected;
-
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: SizedBox(
@@ -194,39 +141,13 @@ class _HomePageContentState extends State<HomePageContent> {
                           var data = men[index];
                           return GestureDetector(
                             onTap: () {
-                              b = likeIdUser
-                                  .where((like) =>
-                                      like['idUser'] == userId &&
-                                      like['idProduct'] == data['idProduct'])
-                                  .toList();
-                              // fetchLike(context);
-                              print(b);
-                              if (b.length > 0) {
-                                setState(() {
-                                  like = true;
-                                  print(like);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Details(
-                                              data: data,
-                                              like: like,
-                                            )),
-                                  );
-                                });
-                                print(b);
-                                print(like);
-                              } else {
-                                like = false;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Details(
-                                            data: data,
-                                            like: like,
-                                          )),
-                                );
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Details(
+                                          data: data,
+                                        )),
+                              );
                             },
                             child: view(index, size, _controllerMen, data),
                           );
@@ -296,7 +217,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                 MaterialPageRoute(
                                     builder: (context) => Details(
                                           data: data,
-                                          like: likeIdUser.isNotEmpty,
                                         )),
                               );
                             },
@@ -357,9 +277,9 @@ class _HomePageContentState extends State<HomePageContent> {
                       child: PageView.builder(
                         controller: _controllerChildren,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: men.length,
+                        itemCount: children.length,
                         itemBuilder: (context, index) {
-                          dynamic data = men[index];
+                          dynamic data = children[index];
                           return GestureDetector(
                               onTap: () {
                                 print(data['title']);
@@ -368,7 +288,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                   MaterialPageRoute(
                                       builder: (context) => Details(
                                             data: data,
-                                            like: like,
                                           )),
                                 );
                               },
@@ -429,9 +348,9 @@ class _HomePageContentState extends State<HomePageContent> {
                       child: PageView.builder(
                         controller: _controllerAccessories,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: men.length,
+                        itemCount: accessories.length,
                         itemBuilder: (context, index) {
-                          dynamic data = men[index];
+                          dynamic data = accessories[index];
                           return GestureDetector(
                               onTap: () {
                                 print(data['title']);
@@ -439,7 +358,6 @@ class _HomePageContentState extends State<HomePageContent> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Details(
-                                            like: like,
                                             data: data,
                                           )),
                                 );

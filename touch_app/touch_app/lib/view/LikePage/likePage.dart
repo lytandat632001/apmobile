@@ -1,10 +1,15 @@
 // ignore_for_file: file_names
+import 'dart:convert';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/model/product.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
+import 'package:http/http.dart' as http;
 
 class LikePage extends StatefulWidget {
   const LikePage({super.key});
@@ -14,16 +19,100 @@ class LikePage extends StatefulWidget {
 }
 
 class _LikePageState extends State<LikePage> {
+  bool isFetching = true;
+  List<dynamic> likes = [];
+  List<dynamic> products = [];
+  List<dynamic> likeIdUser = [];
+  List<dynamic> filteredList = [];
+
+  Future<void> fetchLikeProduct() async {
+    var apiUrlProduct = 'https://api-datly.phamthanhnam.com/api/products/';
+    var apiUrlLike = 'https://api-datly.phamthanhnam.com/api/like/';
+    try {
+      var response1 = await http.get(Uri.parse(apiUrlProduct));
+      var response2 = await http.get(Uri.parse(apiUrlLike));
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
+
+      if (response1.statusCode == 200 && response2.statusCode == 200) {
+        setState(() {
+          products = jsonDecode(response1.body);
+          likes = jsonDecode(response2.body);
+          likeIdUser = likes.where((like) => like['idUser'] == userId).toList();
+          print(likeIdUser);
+          filteredList = products
+              .where((itemB) => likeIdUser
+                  .any((itemA) => itemA['idProduct'] == itemB['idProduct']))
+              .toList();
+          print(filteredList);
+          isFetching = false;
+        });
+        // setState(() {
+        //   likeIdUser = likes.where((like) => like['idUser'] == userId).toList();
+        //   print(likeIdUser);
+
+        // });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
+
+  Future<http.Response> deleteLike(int idLike) async {
+    final http.Response response = await http.delete(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/like/$idLike'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print('xoa thanh cong ra khoi yeu thich');
+    return response;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLikeProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isFetching) {
+      return const Center(
+        child: CircularProgressIndicator(), // Hoặc tiến trình chờ khác
+      );
+    }
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.userId;
+    final token = userProvider.token;
+
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     final size = MediaQuery.of(context).size;
     void onDelete(dynamic data) {
       setState(() {
-        if (itemsOnLikes.length == 1) {
-          itemsOnLikes.clear();
+        if (filteredList.length == 1) {
+          filteredList.clear();
         } else {
-          itemsOnLikes(element) => element['idProduct'] == data['idProduct'];
+          List<dynamic> filterDelete = [];
+          filterDelete = likeIdUser
+              .where((like) => like['idProduct'] == data['idProduct'])
+              .toList();
+          int idLike = filterDelete[0]['id'];
+          deleteLike(idLike);
+
+          filteredList.removeWhere(
+              (element) => element['idProduct'] == data['idProduct']);
         }
       });
     }
@@ -38,13 +127,13 @@ class _LikePageState extends State<LikePage> {
               //color: Colors.blue,
               width: size.width,
               height: size.height * 0.6,
-              child: itemsOnLikes.isNotEmpty
+              child: filteredList.isNotEmpty
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       physics: const BouncingScrollPhysics(),
-                      itemCount: itemsOnLikes.length,
+                      itemCount: filteredList.length,
                       itemBuilder: (context, index) {
-                        dynamic current = itemsOnLikes[index];
+                        dynamic current = filteredList[index];
                         return Container(
                           margin: const EdgeInsets.all(8),
                           // margin: const EdgeInsets.only(top: 8),
@@ -60,8 +149,7 @@ class _LikePageState extends State<LikePage> {
                                 width: size.width * 0.35,
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: AssetImage(
-                                          itemsOnLikes[index]['image']),
+                                      image: AssetImage(current['image']),
                                       fit: BoxFit.cover,
                                     ),
                                     boxShadow: const [
@@ -127,7 +215,6 @@ class _LikePageState extends State<LikePage> {
                                       ),
                                       onPressed: () {
                                         String messageText;
-                                        print(current['title']);
 
                                         setState(() {
                                           if (itemsOnCart.contains(current) ==
@@ -231,7 +318,6 @@ class _LikePageState extends State<LikePage> {
                                   MaterialPageRoute(
                                     builder: (context) => const HomeProduct(),
                                   ));
-                             
                             },
                             child: SizedBox(
                               height: 40,
