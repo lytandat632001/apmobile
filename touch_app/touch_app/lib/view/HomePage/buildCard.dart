@@ -46,14 +46,7 @@ class buildCard extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        // Text(
-        //   data['description'],
-        //   style: const TextStyle(
-        //     color: kColor,
-        //     fontSize: 18,
-        //     fontWeight: FontWeight.w400,
-        // //   ),
-        // ),
+      
         RatingBarIndicator(
           rating: 4.0,
           itemBuilder: (context, index) => const Icon(

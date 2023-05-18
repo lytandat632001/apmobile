@@ -48,11 +48,7 @@ class _LikePageState extends State<LikePage> {
           print(filteredList);
           isFetching = false;
         });
-        // setState(() {
-        //   likeIdUser = likes.where((like) => like['idUser'] == userId).toList();
-        //   print(likeIdUser);
-
-        // });
+  
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
@@ -93,12 +89,7 @@ class _LikePageState extends State<LikePage> {
         child: CircularProgressIndicator(), // Hoặc tiến trình chờ khác
       );
     }
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final userId = userProvider.userId;
-    final token = userProvider.token;
 
-    List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-    final size = MediaQuery.of(context).size;
     void onDelete(dynamic data) {
       setState(() {
         if (filteredList.length == 1) {
@@ -117,6 +108,12 @@ class _LikePageState extends State<LikePage> {
       });
     }
 
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.userId;
+    final token = userProvider.token;
+
+    List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SizedBox(
         width: size.width,

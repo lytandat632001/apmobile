@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/utils/constants.dart';
+import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
+import 'package:http/http.dart' as http;
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -11,28 +16,95 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  List<dynamic> cartIdUser = [];
+  List<dynamic> products = [];
+  List<dynamic> cart = [];
+  List<dynamic> filteredList = [];
+  bool isFetching = true;
   int value = 1;
-  void decreasePrice() {
+
+  Future<void> fetchCarts() async {
+    var apiUrlProduct = 'https://api-datly.phamthanhnam.com/api/products/';
+    var apiUrlCart = 'https://api-datly.phamthanhnam.com/api/carts/';
+    try {
+      var response1 = await http.get(Uri.parse(apiUrlProduct));
+      var response2 = await http.get(Uri.parse(apiUrlCart));
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
+
+      if (response1.statusCode == 200 && response2.statusCode == 200) {
+        setState(() {
+          products = jsonDecode(response1.body);
+          cart = jsonDecode(response2.body);
+          cartIdUser = cart.where((like) => like['idUser'] == userId).toList();
+
+          filteredList = products
+              .where((itemB) => cartIdUser
+                  .any((itemA) => itemA['idProduct'] == itemB['idProduct']))
+              .toList();
+
+          isFetching = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
+
+  Future<http.Response> deleteCart(int idCart) async {
+    final http.Response response = await http.delete(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/like/$idCart'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print('xoa thanh cong ra khoi yeu thich');
+    return response;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCarts();
+  }
+
+  void decreasePrice(int index) {
     setState(() {
-      value -= 1;
+      if (cartIdUser[index]['quantity'] > 1) {
+        cartIdUser[index]['quantity'] -= 1;
+      } else {
+        onDelete(filteredList[index]);
+      }
     });
   }
 
-  void increasePrice() {
+  void increasePrice(int index) {
     setState(() {
-      value += 1;
+      cartIdUser[index]['quantity'] += 1;
     });
   }
 
-  double calculateTotalPrice(int value) {
+  double calculateTotalPrice() {
     double total = 0.0;
-    if (itemsOnCart.isEmpty) {
+    if (filteredList.isEmpty) {
       total = 0;
     } else {
-      for (dynamic data in itemsOnCart) {
+      for (int i = 0; i < filteredList.length; i++) {
+        dynamic data = filteredList[i];
         if (data['priceBase'] is String) {
           double datas = double.parse(data['priceBase']);
-          total += datas * value;
+          total += datas * cartIdUser[i]['quantity'];
         }
       }
     }
@@ -41,32 +113,46 @@ class _CartPageState extends State<CartPage> {
 
   double calculateShipping() {
     double shipping = 0.0;
-    if (itemsOnCart.isEmpty) {
+    if (calculateTotalPrice() > 20) {
       shipping = 0.0;
       return shipping;
-    } else if (itemsOnCart.length <= 3) {
+    } else {
       shipping = 30;
       return shipping;
-    } else {
-      shipping = 60;
-      return shipping;
     }
+  }
+
+  void onDelete(dynamic data) {
+    setState(() {
+      if (filteredList.length == 1) {
+        filteredList.clear();
+      } else {
+        List<dynamic> filterDelete = [];
+        filterDelete = cartIdUser
+            .where((like) => like['idProduct'] == data['idProduct'])
+            .toList();
+        int idCart = filterDelete[0]['idCart'];
+        deleteCart(idCart);
+
+        filteredList.removeWhere(
+            (element) => element['idProduct'] == data['idProduct']);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     final size = MediaQuery.of(context).size;
-    void onDelete(dynamic data) {
-      setState(() {
-        if (itemsOnCart.length == 1) {
-          itemsOnCart.clear();
-        } else {
-          itemsOnCart.removeWhere(
-              (element) => element['idProduct'] == data['idProduct']);
-        }
-      });
+
+    if (isFetching) {
+      return const Center(
+        child: CircularProgressIndicator(), // Hoặc tiến trình chờ khác
+      );
     }
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.userId;
+    final token = userProvider.token;
 
     return Scaffold(
       body: SizedBox(
@@ -78,13 +164,14 @@ class _CartPageState extends State<CartPage> {
               //color: Colors.blue,
               width: size.width,
               height: size.height * 0.6,
-              child: itemsOnCart.isNotEmpty
+              child: filteredList.isNotEmpty
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       physics: const BouncingScrollPhysics(),
-                      itemCount: itemsOnCart.length,
+                      itemCount: filteredList.length,
                       itemBuilder: (context, index) {
-                        var current = itemsOnCart[index];
+                        var current = filteredList[index];
+                        int quantity = cartIdUser[index]['quantity'];
                         return Container(
                           margin: const EdgeInsets.all(8),
                           // margin: const EdgeInsets.only(top: 8),
@@ -100,8 +187,7 @@ class _CartPageState extends State<CartPage> {
                                 width: size.width * 0.35,
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: AssetImage(
-                                          itemsOnCart[index]['image']),
+                                      image: AssetImage(current['image']),
                                       fit: BoxFit.cover,
                                     ),
                                     boxShadow: const [
@@ -163,12 +249,7 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                if (value > 1) {
-                                                  decreasePrice();
-                                                } else {
-                                                  onDelete(current);
-                                                  value = 1;
-                                                }
+                                                decreasePrice(index);
                                               });
                                             },
                                             child: const Icon(
@@ -178,7 +259,7 @@ class _CartPageState extends State<CartPage> {
                                             ),
                                           ),
                                           Text(
-                                            value.toString(),
+                                            quantity.toString(),
                                             style: const TextStyle(
                                                 color: kColor,
                                                 fontWeight: FontWeight.w400,
@@ -187,7 +268,7 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                increasePrice();
+                                                increasePrice(index);
                                               });
                                             },
                                             child: const Icon(
@@ -301,7 +382,7 @@ class _CartPageState extends State<CartPage> {
                               color: Colors.black),
                         ),
                         Text(
-                          calculateTotalPrice(value).toString(),
+                          calculateTotalPrice().toString(),
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
