@@ -77,7 +77,7 @@ class _LoginContentNewState extends State<LoginContentNew> {
                     ImputWidget(
                         hint: 'Password',
                         hintIcon: closeIcon,
-                        obscureText: false,
+                        obscureText: true,
                         controller: _passwordController),
                     LoginButtonWidget(
                       title: 'Log In',

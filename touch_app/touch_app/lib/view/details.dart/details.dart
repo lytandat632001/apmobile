@@ -24,6 +24,7 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   List<dynamic> likes = [];
   List<dynamic> likeIdUser = [];
+  List<dynamic> filterCarts = [];
   bool islike = false;
   List<dynamic> carts = [];
   List<dynamic> cartIdUser = [];
@@ -94,7 +95,8 @@ class _DetailsState extends State<Details> {
           cartIdUser = carts
               .where((carts) =>
                   carts['idUser'] == userId &&
-                  carts['idProduct'] == widget.data['idProduct'])
+                  carts['idProduct'] == widget.data['idProduct'] &&
+                  carts['code'] == 1)
               .toList();
 
           if (cartIdUser.isNotEmpty) {
@@ -129,12 +131,13 @@ class _DetailsState extends State<Details> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, int>{
-        'quantity': value,
+        'quantity': cartIdUser[0]['quantity'] + value,
         'idUser': cartIdUser[0]['idUser'],
         'idProduct': cartIdUser[0]['idProduct'],
         'code': cartIdUser[0]['code']
       }),
     );
+    
   }
 
   Future<void> postCart(int? userId, int idProduct, int quantity) async {
@@ -147,7 +150,7 @@ class _DetailsState extends State<Details> {
         'quantity': quantity,
         'idUser': userId,
         'idProduct': idProduct,
-        'code': 341
+        'code': 1
       }),
     );
 
@@ -175,6 +178,7 @@ class _DetailsState extends State<Details> {
   void initState() {
     super.initState();
     fetchLike();
+    fetchCarts();
   }
 
   int selectedSize = 3;
@@ -411,7 +415,7 @@ class _DetailsState extends State<Details> {
                               String messageText;
                               setState(() {
                                 // AddToCart.addToCart(current, context);
-
+                                print(isCart);
                                 if (isCart == true) {
                                   updateCarts(value);
                                   messageText =

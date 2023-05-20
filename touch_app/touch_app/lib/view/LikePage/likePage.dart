@@ -48,7 +48,6 @@ class _LikePageState extends State<LikePage> {
           print(filteredList);
           isFetching = false;
         });
-  
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
@@ -74,6 +73,52 @@ class _LikePageState extends State<LikePage> {
     );
     print('xoa thanh cong ra khoi yeu thich');
     return response;
+  }
+
+  List<dynamic> carts = [];
+  List<dynamic> cartIdUser = [];
+  bool isCart = false;
+
+  Future<void> fetchCarts(int idProduct) async {
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/carts/';
+    try {
+      var response = await http.get(Uri.parse(apiUrl));
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
+
+      if (response.statusCode == 200) {
+        setState(() {
+          carts = jsonDecode(response.body);
+        });
+        setState(() {
+          cartIdUser = carts
+              .where((carts) =>
+                  carts['idUser'] == userId && carts['idProduct'] == idProduct)
+              .toList();
+
+          if (cartIdUser.isNotEmpty) {
+            isCart = true;
+          } else {
+            isCart = false;
+          }
+
+          isFetching = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
   }
 
   @override
@@ -106,6 +151,43 @@ class _LikePageState extends State<LikePage> {
               (element) => element['idProduct'] == data['idProduct']);
         }
       });
+    }
+
+    Future<http.Response> updateCarts(int value) {
+      int idCart = cartIdUser[0]['idCart'];
+      return http.put(
+        Uri.parse('https://api-datly.phamthanhnam.com/api/carts/$idCart'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, int>{
+          'quantity': cartIdUser[0]['quantity'] + value,
+          'idUser': cartIdUser[0]['idUser'],
+          'idProduct': cartIdUser[0]['idProduct'],
+          'code': cartIdUser[0]['code']
+        }),
+      );
+    }
+
+    Future<void> postCart(int? userId, int idProduct, int quantity) async {
+      final response = await http.post(
+        Uri.parse('https://api-datly.phamthanhnam.com/api/carts/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, int?>{
+          'quantity': quantity,
+          'idUser': userId,
+          'idProduct': idProduct,
+          'code': 1
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        print('thanh cong them vao gio hang');
+      } else {
+        throw Exception('them vao gio hang that bai');
+      }
     }
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -210,20 +292,21 @@ class _LikePageState extends State<LikePage> {
                                         ),
                                         //  elevation: MaterialStateProperty.all(0),
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         String messageText;
-
+                                        await fetchCarts(current['idProduct']);
                                         setState(() {
-                                          if (itemsOnCart.contains(current) ==
-                                              true) {
+                                          print(isCart);
+                                          if (isCart == true) {
+                                            updateCarts(index);
                                             messageText =
                                                 "Sản phẩm đã tồn tại trong giỏ hàng!";
                                           } else {
-                                            itemsOnCart.add(current);
+                                            postCart(userId,
+                                                current['idProduct'], index);
                                             messageText =
                                                 "Sản phẩm đã được thêm vào giỏ hàng!";
                                           }
-
                                           var snackBar = SnackBar(
                                               backgroundColor:
                                                   Colors.transparent,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:touch_app/data/dataProduct.dart';
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/userProvider.dart';
+import 'package:touch_app/view/CartPage/checkout.dart';
 import 'package:touch_app/view/HomePage/Home.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,11 +38,14 @@ class _CartPageState extends State<CartPage> {
         setState(() {
           products = jsonDecode(response1.body);
           cart = jsonDecode(response2.body);
-          cartIdUser = cart.where((like) => like['idUser'] == userId).toList();
+          cartIdUser = cart
+              .where((cart) => cart['idUser'] == userId && cart['code'] == 1)
+              .toList();
 
           filteredList = products
-              .where((itemB) => cartIdUser
-                  .any((itemA) => itemA['idProduct'] == itemB['idProduct']))
+              .where((itemB) => cartIdUser.any((itemA) =>
+                  itemA['idProduct'] == itemB['idProduct'] &&
+                  itemA['code'] == 1))
               .toList();
 
           isFetching = false;
@@ -64,12 +68,12 @@ class _CartPageState extends State<CartPage> {
 
   Future<http.Response> deleteCart(int idCart) async {
     final http.Response response = await http.delete(
-      Uri.parse('https://api-datly.phamthanhnam.com/api/like/$idCart'),
+      Uri.parse('https://api-datly.phamthanhnam.com/api/carts/$idCart'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print('xoa thanh cong ra khoi yeu thich');
+    print('xoa ra khoi gio hang');
     return response;
   }
 
@@ -79,19 +83,43 @@ class _CartPageState extends State<CartPage> {
     fetchCarts();
   }
 
-  void decreasePrice(int index) {
+  Future<http.Response> updateCart(
+    int idUser,
+    int idProduct,
+    int quantity,
+    int idCart,
+  ) {
+    return http.put(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/products/$idCart'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, int>{
+        'idUser': idUser,
+        'idProduct': idProduct,
+        'quantity': quantity,
+        'code': 1,
+      }),
+    );
+  }
+
+  void decreasePrice(int index, int? idUser) {
     setState(() {
       if (cartIdUser[index]['quantity'] > 1) {
         cartIdUser[index]['quantity'] -= 1;
+        updateCart(idUser!, cartIdUser[index]['idProduct'],
+            cartIdUser[index]['quantity'], cartIdUser[index]['idCart']);
       } else {
         onDelete(filteredList[index]);
       }
     });
   }
 
-  void increasePrice(int index) {
+  void increasePrice(int index, int? idUser) {
     setState(() {
       cartIdUser[index]['quantity'] += 1;
+      updateCart(idUser!, cartIdUser[index]['idProduct'],
+          cartIdUser[index]['quantity'], cartIdUser[index]['idCart']);
     });
   }
 
@@ -133,7 +161,8 @@ class _CartPageState extends State<CartPage> {
             .toList();
         int idCart = filterDelete[0]['idCart'];
         deleteCart(idCart);
-
+        print(idCart);
+        print('idcart');
         filteredList.removeWhere(
             (element) => element['idProduct'] == data['idProduct']);
       }
@@ -195,7 +224,7 @@ class _CartPageState extends State<CartPage> {
                                         offset: Offset(0, 4),
                                         blurRadius: 4,
                                         color: Color.fromARGB(61, 0, 0, 0),
-                                      )
+                                      ),
                                     ]),
                               ),
                               Padding(
@@ -249,7 +278,7 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                decreasePrice(index);
+                                                decreasePrice(index, userId);
                                               });
                                             },
                                             child: const Icon(
@@ -268,7 +297,7 @@ class _CartPageState extends State<CartPage> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
-                                                increasePrice(index);
+                                                increasePrice(index, userId);
                                               });
                                             },
                                             child: const Icon(
@@ -370,28 +399,6 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 30, left: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Tổng thanh toán",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          calculateTotalPrice().toString(),
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
                     padding: const EdgeInsets.only(right: 25, left: 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -405,6 +412,29 @@ class _CartPageState extends State<CartPage> {
                         ),
                         Text(
                           calculateShipping().toString(),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30, left: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Tổng thanh toán",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          (calculateTotalPrice() + calculateShipping())
+                              .toString(),
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
@@ -428,23 +458,29 @@ class _CartPageState extends State<CartPage> {
                         //  elevation: MaterialStateProperty.all(0),
                       ),
                       onPressed: () {
+                        print(cartIdUser);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomeProduct(),
+                              builder: (context) => CheckoutPage(
+                                  shipping: calculateShipping(),
+                                  total: calculateTotalPrice() +
+                                      calculateShipping(),
+                                  carts: cartIdUser,
+                                  idUser: userId),
                             ));
                       },
                       child: SizedBox(
                         height: 40,
                         width: size.width * 0.8,
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             Text(
                               'Thanh toán',
                               style: TextStyle(
                                   color: kColor,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold),
                             ),
                             Icon(
