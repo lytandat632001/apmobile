@@ -9,14 +9,14 @@ import 'package:touch_app/utils/userProvider.dart';
 import 'package:intl/intl.dart';
 import '../Login_SignUp/inputWidget.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+class OrderPage extends StatefulWidget {
+  const OrderPage({super.key});
 
   @override
-  State<AccountPage> createState() => _AccountPageState();
+  State<OrderPage> createState() => _OrderPageState();
 }
 
-class _AccountPageState extends State<AccountPage> {
+class _OrderPageState extends State<OrderPage> {
   dynamic user;
   bool isFetching = true;
   List<dynamic> checkoutList = [];
@@ -57,23 +57,14 @@ class _AccountPageState extends State<AccountPage> {
           //3 là đang giao
           //4 là đã nhận
           checkoutIdUserStatus2 = checkoutList
-              .where((element) =>
-                  element['idUser'] == userId && element['idStatus'] == 2)
+              .where((element) => element['idStatus'] == 2)
               .toList();
           checkoutIdUserStatus3 = checkoutList
-              .where((element) =>
-                  element['idUser'] == userId && element['idStatus'] == 3)
+              .where((element) => element['idStatus'] == 3)
               .toList();
           checkoutIdUserStatus4 = checkoutList
-              .where((element) =>
-                  element['idUser'] == userId && element['idStatus'] == 4)
+              .where((element) => element['idStatus'] == 4)
               .toList();
-          print("status2");
-          print(checkoutIdUserStatus2);
-          print("status3");
-          print(checkoutIdUserStatus3);
-          print("status4");
-          print(checkoutIdUserStatus4);
 
           filteredListCart1 = cartList
               .where((itemB) => checkoutIdUserStatus2.any((itemA) =>
@@ -126,29 +117,23 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  Future<void> fetchUsers(int? userID) async {
-    var apiUrl = 'https://api-datly.phamthanhnam.com/api/users/$userID';
-
-    try {
-      var response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        setState(() {
-          user = jsonDecode(response.body);
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Lay thành công')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
-        );
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã xảy ra lỗi')),
-      );
-    }
+  Future<http.Response> updateCheckout(int idCheckout, double total,
+      double shipping, int idCart, String dateBuy, int idUser, int status) {
+    return http.put(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/checkouts/$idCheckout'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "idStatus": status,
+        "idUser": idUser,
+        "total": total,
+        "idShipping": shipping,
+        "dateBuy": dateBuy,
+        "type": "Thanh toán khi nhận hàng",
+        "idCart": idCart
+      }),
+    );
   }
 
   @override
@@ -157,124 +142,13 @@ class _AccountPageState extends State<AccountPage> {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     int? userId = userProvider.userId;
-    fetchUsers(userId);
+
     fetchCheckouts();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final _fullnameController = TextEditingController();
-    final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
-    String passwordCurrcent = user != null ? user['password'] : '';
-    final _phoneController = TextEditingController();
-    final _addressController = TextEditingController();
-    _fullnameController.text = user != null ? user['fullname'] : '';
-    _emailController.text = user != null ? user['email'] : '';
-    _phoneController.text = user != null ? user['phone'] : '';
-    _addressController.text = user != null ? user['address'] : '';
-
-    Future<void> updateUserData() async {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final userId = userProvider.userId;
-      final token = userProvider.token;
-
-      final url = 'https://api-datly.phamthanhnam.com/api/users/$userId';
-
-      final body = {
-        'fullname': _fullnameController.text,
-        'email': _emailController.text,
-        'password': passwordCurrcent,
-        'phone': _phoneController.text,
-        'address': _addressController.text,
-      };
-
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      try {
-        final response = await http.put(
-          Uri.parse(url),
-          headers: headers,
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cập nhật thành công')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
-          );
-        }
-      } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã xảy ra lỗi')),
-        );
-      }
-    }
-
-    Future<void> ChangePassword() async {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final userId = userProvider.userId;
-      final token = userProvider.token;
-
-      final url =
-          'https://api-datly.phamthanhnam.com/api/users/$userId/$passwordCurrcent';
-
-      final body = {'password': passwordCurrcent};
-
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      try {
-        final response = await http.put(
-          Uri.parse(url),
-          headers: headers,
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cập nhật thành công')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
-          );
-        }
-      } catch (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã xảy ra lỗi')),
-        );
-      }
-    }
-
-    Future<http.Response> updateCheckout(int idCheckout, double total,
-        double shipping, int idCart, String dateBuy, int idUser, int status) {
-      return http.put(
-        Uri.parse(
-            'https://api-datly.phamthanhnam.com/api/checkouts/$idCheckout'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({
-          "idStatus": status,
-          "idUser": idUser,
-          "total": total,
-          "idShipping": shipping,
-          "dateBuy": dateBuy,
-          "type": "Thanh toán khi nhận hàng",
-          "idCart": idCart
-        }),
-      );
-    }
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -346,11 +220,13 @@ class _AccountPageState extends State<AccountPage> {
                                   return false; // Điều kiện không thỏa mãn
                                 }
                               }).toList();
+
                               DateTime dateTime = DateTime.parse(
                                   checkouts['dateBuy'].toString());
                               String formattedDate =
                                   DateFormat('dd/MM/yyyy').format(dateTime);
-
+                              String formatted =
+                                  DateFormat('yyyy/MM/dd').format(dateTime);
                               double total =
                                   double.parse(carts['quantity'].toString()) *
                                       double.parse(
@@ -367,7 +243,7 @@ class _AccountPageState extends State<AccountPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            products[0]['image'],
+                                            'assets/images/adidas-sport-pant.jpg',
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -390,7 +266,44 @@ class _AccountPageState extends State<AccountPage> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(products[0]['title'].toString()),
-                                        Text('Số lượng: ${carts['quantity']}'),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                'Số lượng: ${carts['quantity']}'),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  border:
+                                                      Border.all(width: 0.5),
+                                                  color: kColor),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    updateCheckout(
+                                                        int.parse(checkouts[
+                                                                'idCheckout']
+                                                            .toString()),
+                                                        double.parse(
+                                                            checkouts['total']),
+                                                        double.parse(checkouts[
+                                                            'idShipping']),
+                                                        int.parse(
+                                                            checkouts['idCart']
+                                                                .toString()),
+                                                        formatted,
+                                                        int.parse(
+                                                            checkouts['idUser']
+                                                                .toString()),
+                                                        3);
+                                                  },
+                                                  child: Text(
+                                                    'Đang giao',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )),
+                                            )
+                                          ],
+                                        ),
                                         Text(
                                             'Giá: ${products[0]['priceBase']}'),
                                         Text(
@@ -504,7 +417,7 @@ class _AccountPageState extends State<AccountPage> {
                                                         4);
                                                   },
                                                   child: Text(
-                                                    'Đã nhận hàng',
+                                                    'Đã giao',
                                                     style: TextStyle(
                                                         color: Colors.white),
                                                   )),
@@ -550,6 +463,8 @@ class _AccountPageState extends State<AccountPage> {
                               }).toList();
                               DateTime dateTime = DateTime.parse(
                                   checkouts['dateBuy'].toString());
+                              String formatted =
+                                  DateFormat('yyyy/MM/dd').format(dateTime);
                               String formattedDate =
                                   DateFormat('dd/MM/yyyy').format(dateTime);
                               double total =
@@ -608,105 +523,6 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                       ])),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: SizedBox(
-                      width: size.width,
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Thông tin tài khoản",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          ImputWidget(
-                              hint:
-                                  user != null ? user['fullname'] : "fullname",
-                              hintIcon: closeIcon,
-                              obscureText: false,
-                              controller: _fullnameController),
-                          ImputWidget(
-                              hint: user != null ? user['email'] : "email",
-                              hintIcon: closeIcon,
-                              obscureText: false,
-                              controller: _emailController),
-                          // ImputWidget(
-                          //     hint: user != null ? user['password'] : "password",
-                          //     hintIcon: closeIcon,
-                          //     obscureText: false,
-                          //     controller: _passwordController),
-                          ImputWidget(
-                              hint: user != null ? user['phone'] : "phone",
-                              hintIcon: closeIcon,
-                              obscureText: false,
-                              controller: _phoneController),
-                          ImputWidget(
-                              hint: user != null ? user['address'] : "address",
-                              hintIcon: closeIcon,
-                              obscureText: false,
-                              controller: _addressController),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(inputFieldColor),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              shape: const StadiumBorder(),
-                              elevation: 10,
-                              shadowColor: const Color(inputFieldColor),
-                            ),
-                            onPressed: () {
-                              updateUserData();
-                            },
-                            // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
-                            child: const Text(
-                              "Cập nhật",
-                              style: TextStyle(
-                                color: kColor,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-
-                          Container(
-                            child: Column(
-                              children: [
-                                ImputWidget(
-                                    hint: 'password',
-                                    hintIcon: closeIcon,
-                                    obscureText: false,
-                                    controller: _passwordController),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color(inputFieldColor),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    shape: const StadiumBorder(),
-                                    elevation: 10,
-                                    shadowColor: const Color(inputFieldColor),
-                                  ),
-                                  onPressed: () {
-                                    ChangePassword();
-                                  },
-                                  // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
-                                  child: const Text(
-                                    "Thay đổi mật khẩu",
-                                    style: TextStyle(
-                                      color: kColor,
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

@@ -48,6 +48,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    
     final size = MediaQuery.of(context).size;
     // itemsOnExplore = widget.data;
     return Scaffold(
@@ -84,7 +86,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Details(data: current,like: true,)),
+                            builder: (context) => Details(data: current,)),
                       );
                     },
                     child: Column(

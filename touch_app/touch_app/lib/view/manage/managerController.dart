@@ -4,6 +4,8 @@ import 'package:touch_app/view/manage/addProduct.dart';
 import 'package:touch_app/view/manage/editUserPage.dart';
 import 'package:touch_app/view/manage/listEditProduct.dart';
 
+import 'order.dart';
+
 class ManagerController extends StatefulWidget {
   const ManagerController({super.key});
 
@@ -73,6 +75,25 @@ class _ManagerControllerState extends State<ManagerController> {
                     },
                     child: Text(
                       'Quản lý người dùng',
+                      style: TextStyle(
+                          color: kBackgroundColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    )),
+              ),
+              Container(
+                width: size.width * 0.5,
+                color: Colors.blue,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const OrderPage()));
+                    },
+                    child: Text(
+                      'Quản lý đơn hàng',
                       style: TextStyle(
                           color: kBackgroundColor,
                           fontSize: 18,

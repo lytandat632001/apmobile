@@ -93,6 +93,7 @@ class _HomeProductState extends State<HomeProduct> {
             icon: const Icon(FontAwesomeIcons.bell),
             iconSize: 20,
             color: kColor,
+            
           ),
           IconButton(
             onPressed: () {

@@ -37,7 +37,7 @@ class _ImputWidgetState extends State<ImputWidget> {
             //   hintText = value;
             //   print(hintText);
             // },
-            
+
             controller: widget.controller,
             obscureText: widget.obscureText,
             textAlignVertical: TextAlignVertical.bottom,
@@ -51,7 +51,11 @@ class _ImputWidgetState extends State<ImputWidget> {
                 borderRadius: BorderRadius.circular(20),
               ),
               suffixIconColor: kPrimaryColor,
-              suffixIcon: widget.hintIcon,
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    widget.controller.text = "";
+                  },
+                  icon: widget.hintIcon),
             ),
           ),
         ),

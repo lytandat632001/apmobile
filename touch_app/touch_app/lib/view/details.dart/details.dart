@@ -14,101 +14,186 @@ import 'package:touch_app/utils/userProvider.dart';
 import 'package:touch_app/view/details.dart/IconFavorite.dart';
 
 class Details extends StatefulWidget {
-  const Details({super.key, required this.data, required this.like});
+  const Details({super.key, required this.data});
   final dynamic data;
-  final bool like;
 
   @override
   State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
-  // bool likeCheck = false;
+  List<dynamic> likes = [];
+  List<dynamic> likeIdUser = [];
+  List<dynamic> filterCarts = [];
+  bool islike = false;
+  List<dynamic> carts = [];
+  List<dynamic> cartIdUser = [];
+  bool isCart = false;
+  bool isFetching = true;
+  int idLike = 0;
 
-  // ValueNotifier<bool> likeNotifier = ValueNotifier<bool>(false);
-  // List<dynamic> likes = [];
-  // List<dynamic> likeIdUser = [];
+  Future<void> fetchLike() async {
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/like/';
+    try {
+      var response = await http.get(Uri.parse(apiUrl));
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
 
-  // bool like = false;
-  // Future<void> fetchLike(BuildContext context) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   final userId = userProvider.userId;
-  //   final token = userProvider.token;
-  //   var apiUrl = 'https://api-datly.phamthanhnam.com/api/like/';
+      if (response.statusCode == 200) {
+        setState(() {
+          likes = jsonDecode(response.body);
+          likeIdUser = likes;
+        });
+        setState(() {
+          likeIdUser = likes
+              .where((like) =>
+                  like['idUser'] == userId &&
+                  like['idProduct'] == widget.data['idProduct'])
+              .toList();
 
-  //   try {
-  //     var response = await http.get(Uri.parse(apiUrl));
+          if (likeIdUser.isNotEmpty) {
+            islike = true;
+            idLike = likeIdUser[0]['id'];
+          } else {
+            islike = false;
+            idLike = 0;
+          }
 
-  //     if (response.statusCode == 200) {
-  //       setState(() {
-  //         likes = jsonDecode(response.body);
-  //         print(likes);
-  //         likeIdUser = likes
-  //             .where((like) =>
-  //                 like['idUser'] == userId &&
-  //                 like['idProduct'] == widget.data['idProduct'])
-  //             .toList();
-  //         print(likeIdUser);
-  //         if (likeIdUser.isNotEmpty) {
-  //           like = true;
-  //         } else {
-  //           like = false;
-  //         }
-  //         print(like);
-  //       });
+          isFetching = false;
+        });
 
-  //       // setState(() {
-  //       //   if (likeIdUser.isNotEmpty) {
-  //       //     print(likeIdUser);
-  //       //     like = true;
-  //       //   } else {
-  //       //     like = false;
-  //       //     print(likeIdUser);
-  //       //   }
-  //       // });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
 
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
-  //       );
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
-  //       );
-  //     }
-  //   } catch (error) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Đã xảy ra lỗi')),
-  //     );
-  //   }
-  // }
+  Future<void> fetchCarts() async {
+    var apiUrl = 'https://api-datly.phamthanhnam.com/api/carts/';
+    try {
+      var response = await http.get(Uri.parse(apiUrl));
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchLike(context);
-  //   // print("............................");
-  //   // print(widget.data);
-  //   // print(like);
-  //   // fetchLike(context);
-  //   // print(widget.data);
-  //   // print(like);
-  // }
+      if (response.statusCode == 200) {
+        setState(() {
+          carts = jsonDecode(response.body);
+          // cartIdUser = likes;
+        });
+        setState(() {
+          cartIdUser = carts
+              .where((carts) =>
+                  carts['idUser'] == userId &&
+                  carts['idProduct'] == widget.data['idProduct'] &&
+                  carts['code'] == 1)
+              .toList();
+
+          if (cartIdUser.isNotEmpty) {
+            isCart = true;
+          } else {
+            isCart = false;
+          }
+
+          isFetching = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xảy ra lỗi')),
+      );
+    }
+  }
+
+  Future<http.Response> updateCarts(int value) {
+    int idCart = cartIdUser[0]['idCart'];
+    return http.put(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/carts/$idCart'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, int>{
+        'quantity': cartIdUser[0]['quantity'] + value,
+        'idUser': cartIdUser[0]['idUser'],
+        'idProduct': cartIdUser[0]['idProduct'],
+        'code': cartIdUser[0]['code']
+      }),
+    );
+    
+  }
+
+  Future<void> postCart(int? userId, int idProduct, int quantity) async {
+    final response = await http.post(
+      Uri.parse('https://api-datly.phamthanhnam.com/api/carts/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, int?>{
+        'quantity': quantity,
+        'idUser': userId,
+        'idProduct': idProduct,
+        'code': 1
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('thanh cong them vao gio hang');
+    } else {
+      throw Exception('them vao gio hang that bai');
+    }
+  }
+
+  int value = 1;
+  void decreasePrice() {
+    setState(() {
+      value -= 1;
+    });
+  }
+
+  void increasePrice() {
+    setState(() {
+      value += 1;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLike();
+    fetchCarts();
+  }
 
   int selectedSize = 3;
   @override
   Widget build(BuildContext context) {
-    // print('likeIdUser: $likeIdUser');
-    // print('likeNotifier: ${likeNotifier.value}');
-    bool likeornot = widget.like;
-    print(likeornot);
+    if (isFetching) {
+      return const Center(
+        child: CircularProgressIndicator(), // Hoặc tiến trình chờ khác
+      );
+    }
+    dynamic current = widget.data;
+    bool contains = itemsOnCart.contains(current);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userId = userProvider.userId;
     final token = userProvider.token;
-    dynamic current = widget.data;
-    bool contains = itemsOnCart.contains(current);
-    bool containsLike = itemsOnLikes.contains(current);
-
-    // bool value = containsLike;
 
     final size = MediaQuery.of(context).size;
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -186,7 +271,10 @@ class _DetailsState extends State<Details> {
                                     fontWeight: FontWeight.bold),
                               ),
                               FavoriteIcon(
-                                widget.like,
+                                islike,
+                                idUser: userId,
+                                idProduct: current['idProduct'],
+                                idLike: idLike,
                               ),
                             ],
                           ),
@@ -211,6 +299,52 @@ class _DetailsState extends State<Details> {
                                   style: const TextStyle(
                                       fontSize: 20, color: kColor)),
                               const SizedBox(width: 40),
+                              SizedBox(
+                                width: size.width * 0.2,
+                                height: size.height * 0.04,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (value > 1) {
+                                            decreasePrice();
+                                          } else {
+                                            value = 1;
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(
+                                        Icons.remove_circle_outline,
+                                        color: kColor,
+                                        size: 25,
+                                      ),
+                                    ),
+                                    Text(
+                                      value.toString(),
+                                      style: const TextStyle(
+                                          color: kColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          increasePrice();
+                                        });
+                                      },
+                                      child: const Icon(
+                                        Icons.add_circle_outline_outlined,
+                                        color: kColor,
+                                        size: 25,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -228,16 +362,7 @@ class _DetailsState extends State<Details> {
                                   var current = sizes[index];
                                   return GestureDetector(
                                     onTap: () {
-                                      setState(() {
-                                        selectedSize = index;
-                                        // print(userId);
-                                        // print(widget.data['idProduct']);
-                                        // print(likes);
-                                        // print(likeIdUser);
-                                        // print(stateLike);
-                                        //   fetchLike(
-                                        //       userId, widget.data['idProduct']);
-                                      });
+                                      setState(() {});
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -290,12 +415,13 @@ class _DetailsState extends State<Details> {
                               String messageText;
                               setState(() {
                                 // AddToCart.addToCart(current, context);
-
-                                if (contains == true) {
+                                print(isCart);
+                                if (isCart == true) {
+                                  updateCarts(value);
                                   messageText =
                                       "Sản phẩm đã tồn tại trong giỏ hàng!";
                                 } else {
-                                  itemsOnCart.add(current);
+                                  postCart(userId, current['idProduct'], value);
                                   messageText =
                                       "Sản phẩm đã được thêm vào giỏ hàng!";
                                 }
