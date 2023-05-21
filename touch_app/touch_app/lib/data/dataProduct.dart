@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:touch_app/model/product.dart';
 import 'package:touch_app/model/user.dart';
 
 // List<Product> clothing = [

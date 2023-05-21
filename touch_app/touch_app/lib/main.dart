@@ -29,7 +29,7 @@ class MainApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: kColor),
         //  fontFamily: GoogleFonts.roboto(fontSize: 16).toString(),
       ),
-      home: const SplashView(),
+      home: MyPage(),
     );
   }
 }

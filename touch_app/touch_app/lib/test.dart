@@ -1,89 +1,81 @@
-// // // import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-// // // import 'package:provider/provider.dart';
+class MyPage extends StatefulWidget {
+  @override
+  _MyPageState createState() => _MyPageState();
+}
 
-// // // import 'package:touch_app/utils/userProvider.dart';
+class _MyPageState extends State<MyPage> {
+  /// Variables
+  late File imageFile;
 
-// // // class ProductListPage extends StatefulWidget {
-// // //   @override
-// // //   _ProductListPageState createState() => _ProductListPageState();
-// // // }
+  /// Widget
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Image Picker"),
+        ),
+        body: Container(
+            child: imageFile == null
+                ? Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            _getFromGallery();
+                          },
+                          child: Text("PICK FROM GALLERY"),
+                        ),
+                        Container(
+                          height: 40.0,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _getFromCamera();
+                          },
+                          child: Text("PICK FROM CAMERA"),
+                        )
+                      ],
+                    ),
+                  )
+                : Container(
+                    child: Image.file(
+                      imageFile,
+                      fit: BoxFit.cover,
+                    ),
+                  )));
+  }
 
-// // // class _ProductListPageState extends State<ProductListPage> {
-// // //   @override
-// // //   Widget build(BuildContext context) {
-// // //     UserProvider userProvider = Provider.of<UserProvider>(context);
-// // //     int? userId = userProvider.userId;
-// // //     String? token = userProvider.token;
-// // //     return Scaffold(
-// // //       body: Center(
-// // //         child: Column(
-// // //           children: [
-// // //             Text('${userId}'),
-// // //             Text('${token}'),
-// // //           ],
-// // //         ),
-// // //       ),
-// // //     );
-// // //   }
-// // // }
+  /// Get from gallery
+  _getFromGallery() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:provider/provider.dart';
-// import 'package:touch_app/model/product.dart';
-// import 'package:touch_app/utils/userProvider.dart';
-
-// class ProductListPage extends StatefulWidget {
-//   const ProductListPage({super.key});
-
-//   @override
-//   _ProductListPageState createState() => _ProductListPageState();
-// }
-
-// class _ProductListPageState extends State<ProductListPage> {
-//   final List<dynamic> productList = [
-//     'Apple',
-//     'Banana',
-//     'Orange',
-//     'Grapes',
-//     'Mango',
-//   ];
-
-//   List<dynamic> searchProducts(List<dynamic> productList, String searchTerm) {
-//     List<dynamic> results = [];
-
-//     for (var product in productList) {
-//       if (product.toString().toLowerCase().contains(searchTerm.toLowerCase())) {
-//         results.add(product);
-//       }
-//     }
-
-//     return results;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Product Search'),
-//         ),
-//         body: Column(
-//           children: [
-//             SearchBar(
-//               onChanged: (searchTerm) {
-//                 List<dynamic> searchResults =
-//                     searchProducts(productList, searchTerm);
-//                 // Xử lý kết quả tìm kiếm ở đây (hiển thị, cập nhật UI, vv.)
-//                 print(searchResults);
-//               },
-//             ),
-//             // Các widget khác trong body...
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  /// Get from Camera
+  _getFromCamera() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+}
