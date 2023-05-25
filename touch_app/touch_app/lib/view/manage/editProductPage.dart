@@ -103,7 +103,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 50, bottom: 20),
                   child: Text(
-                    'THÊM SẢN PHẨM',
+                    'Thay đổi thông tin sản phẩm',
                     style: TextStyle(
                         color: kColor,
                         fontWeight: FontWeight.bold,
@@ -152,8 +152,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     hintIcon: closeIcon,
                     obscureText: false,
                     controller: review),
-                ImputWidget( 
-                  
+                ImputWidget(
                     hint: widget.data != null ? widget.data['star'] : "star",
                     hintIcon: closeIcon,
                     obscureText: false,

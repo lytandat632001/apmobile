@@ -94,7 +94,9 @@ class _LikePageState extends State<LikePage> {
         setState(() {
           cartIdUser = carts
               .where((carts) =>
-                  carts['idUser'] == userId && carts['idProduct'] == idProduct)
+                  carts['idUser'] == userId &&
+                  carts['idProduct'] == idProduct &&
+                  carts['code'] == 1)
               .toList();
 
           if (cartIdUser.isNotEmpty) {
@@ -175,11 +177,12 @@ class _LikePageState extends State<LikePage> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, int?>{
+        body: jsonEncode({
           'quantity': quantity,
           'idUser': userId,
           'idProduct': idProduct,
-          'code': 1
+          'code': 1,
+          'size': 1
         }),
       );
 
@@ -217,6 +220,23 @@ class _LikePageState extends State<LikePage> {
                         itemCount: filteredList.length,
                         itemBuilder: (context, index) {
                           dynamic current = filteredList[index];
+                          String formattedPrice =
+                              current['price'].split('.')[0]; // Lấy phần nguyên
+                          // Thêm dấu chấm ngăn cách hàng nghìn
+                          final pattern =
+                              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                          formattedPrice = formattedPrice.replaceAllMapped(
+                              pattern, (match) => '${match.group(1)}.');
+
+                          String formattedPriceBase = current['priceBase']
+                              .split('.')[0]; // Lấy phần nguyên
+                          // Thêm dấu chấm ngăn cách hàng nghìn
+                          final patternBase =
+                              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                          formattedPriceBase =
+                              formattedPriceBase.replaceAllMapped(
+                                  patternBase, (match) => '${match.group(1)}.');
+
                           return Container(
                             margin: const EdgeInsets.all(8),
                             // margin: const EdgeInsets.only(top: 8),
@@ -266,16 +286,19 @@ class _LikePageState extends State<LikePage> {
                                               onPressed: () {
                                                 onDelete(current);
                                               },
-                                              icon: const Icon(Icons.favorite),
+                                              icon: const Icon(
+                                                Icons.favorite,
+                                                color: Colors.blue,
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      Text('₫${current['price']}'),
+                                      Text('₫$formattedPrice'),
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text('₫${current['priceBase']}'),
+                                      Text('₫$formattedPriceBase'),
                                       const SizedBox(
                                         height: 5,
                                       ),

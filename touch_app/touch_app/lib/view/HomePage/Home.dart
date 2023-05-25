@@ -1,13 +1,11 @@
 // ignore_for_file: file_names, prefer_final_fields
 
-
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/view/CartPage/cart.dart';
 import 'package:touch_app/view/ExplorePage/explorePage.dart';
@@ -25,7 +23,7 @@ class HomeProduct extends StatefulWidget {
 }
 
 class _HomeProductState extends State<HomeProduct> {
- List<dynamic> products = [];
+  List<dynamic> products = [];
   Future<void> fetchProducts() async {
     var apiUrl = 'https://api-datly.phamthanhnam.com/api/products/';
 
@@ -56,7 +54,7 @@ class _HomeProductState extends State<HomeProduct> {
   }
 
   int _index = 0;
-   List<Widget> _widgetScreen = [
+  List<Widget> _widgetScreen = [
     HomePageContent(),
     ExplorePage(),
     const LikePage(),
@@ -88,16 +86,6 @@ class _HomeProductState extends State<HomeProduct> {
           ),
           IconButton(
             onPressed: () {
-              // signOut();
-            },
-            icon: const Icon(FontAwesomeIcons.bell),
-            iconSize: 20,
-            color: kColor,
-            
-          ),
-          IconButton(
-            onPressed: () {
-              
               Navigator.push(
                 context,
                 MaterialPageRoute(

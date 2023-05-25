@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/icons.dart';
@@ -18,6 +20,8 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  File? imageFile;
+  String? imageBase64;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -31,22 +35,41 @@ class _AddProductState extends State<AddProduct> {
     final review = TextEditingController();
     final star = TextEditingController();
 
-    Future<void> postProduct() async {
-      var url = 'https://api-datly.phamthanhnam.com/api/products/';
+    final picker = ImagePicker();
+    String? base64Image;
 
-      var requestBody = {
+    // Future<void> pickImage() async {
+    //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    //   if (pickedFile != null) {
+    //     final bytes = await pickedFile.readAsBytes();
+    //     setState(() {
+    //       base64Image = base64Encode(bytes);
+    //     });
+    //   }
+    //   print(base64Image);
+    // }
+
+    Future<void> postProduct() async {
+      final url = Uri.parse('https://api-datly.phamthanhnam.com/api/products/');
+
+      var sen_str = jsonEncode({
         'title': title.text,
         'description': description.text,
-        'image': image.text,
         'price': price.text,
         'priceBase': priceBase.text,
-        'idCategory': idCategory.text,
+        'idCategory': int.parse(idCategory.text),
         'review': review.text,
         'star': star.text,
-      };
-
+        'image': 'assets/images/DRESS.jpg',
+      });
       try {
-        var response = await http.post(Uri.parse(url), body: requestBody);
+        final headers = <String, String>{
+          'Content-Type': 'application/json', // Chỉ định kiểu nội dung là JSON
+        };
+
+        final response = await http.post(url,
+            headers: headers, // Thêm headers vào request
+            body: sen_str);
 
         if (response.statusCode == 201) {
           // Yêu cầu POST thành công
@@ -56,13 +79,73 @@ class _AddProductState extends State<AddProduct> {
           );
         } else {
           // Xử lý lỗi nếu yêu cầu không thành công
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Không thể thêm sản phẩm')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Không thể thêm sản phẩm' + response.statusCode.toString())));
         }
       } catch (error) {
         // Xử lý lỗi nếu có lỗi trong quá trình gửi yêu cầu
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Đã xảy ra lỗi $error')));
+      }
+    }
+
+    // Future<void> _getFromGallery() async {
+    //   final picker = ImagePicker();
+    //   final pickedFile = await picker.pickImage(
+    //     source: ImageSource.gallery,
+    //     maxWidth: 720,
+    //     maxHeight: 720,
+    //   );
+
+    //   if (pickedFile != null) {
+    //     setState(() {
+    //       imageFile = File(pickedFile.path);
+    //       imageBase64 = base64Encode(imageFile!.readAsBytesSync());
+    //     });
+    //   }
+    // }
+
+    // Future<void> _getFromGallery() async {
+    //   PickedFile? pickedFile = await ImagePicker().getImage(
+    //     source: ImageSource.gallery,
+    //     maxWidth: 1800,
+    //     maxHeight: 1800,
+    //   );
+    //   if (pickedFile != null) {
+    //     setState(() {
+    //       imageFile = File(pickedFile.path);
+
+    //       imageBase64 = base64Encode(imageFile!
+    //           .readAsBytesSync()); // Reset base64 when selecting a new image
+    //     });
+    //   }
+    // }
+
+// _getFromGallery() async {
+//     PickedFile? pickedFile = await ImagePicker().getImage(
+//       source: ImageSource.gallery,
+//       maxWidth: 1800,
+//       maxHeight: 1800,
+//     );
+//     if (pickedFile != null) {
+//       setState(() {
+//         imageFile = File(pickedFile.path);
+//         imageBase64 = null; // Reset base64 when selecting a new image
+//       });
+//     }
+//   }
+    _getFromGallery() async {
+      PickedFile? pickedFile = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          imageFile = File(pickedFile.path);
+          imageBase64 = null; // Reset base64 when selecting a new image
+        });
       }
     }
 
@@ -85,6 +168,27 @@ class _AddProductState extends State<AddProduct> {
                         fontSize: 20),
                   ),
                 ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(inputFieldColor),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 80),
+                    shape: const StadiumBorder(),
+                    elevation: 10,
+                    shadowColor: const Color(inputFieldColor),
+                  ),
+                  onPressed: () {
+                    _getFromGallery();
+                  },
+                  child: const Text(
+                    "Thêm ảnh",
+                    style: TextStyle(
+                      color: kColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
                 ImputWidget(
                     hint: "title",
                     hintIcon: closeIcon,
@@ -95,11 +199,11 @@ class _AddProductState extends State<AddProduct> {
                     hintIcon: closeIcon,
                     obscureText: false,
                     controller: description),
-                ImputWidget(
-                    hint: "image",
-                    hintIcon: closeIcon,
-                    obscureText: false,
-                    controller: image),
+                // ImputWidget(
+                //     hint: 'Hình ảnh',
+                //     hintIcon: closeIcon,
+                //     obscureText: false,
+                //     controller: image),
                 ImputWidget(
                     hint: "price",
                     hintIcon: closeIcon,
@@ -137,13 +241,10 @@ class _AddProductState extends State<AddProduct> {
                       shadowColor: const Color(inputFieldColor),
                     ),
                     onPressed: () {
-                      postProduct();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => super.widget));
+                      setState(() {
+                        postProduct();
+                      });
                     },
-                    // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                     child: const Text(
                       "Thêm sản phẩm",
                       style: TextStyle(
@@ -166,7 +267,6 @@ class _AddProductState extends State<AddProduct> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                   child: const Text(
                     "Quay lại",
                     style: TextStyle(
@@ -175,6 +275,9 @@ class _AddProductState extends State<AddProduct> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
               ],
             ),

@@ -12,7 +12,7 @@ class SearchCustom extends SearchDelegate {
       IconButton(
           onPressed: () {
             if (query.isEmpty) {
-              close(context, null);
+              close(context, null); 
             } else {
               query = '';
             }

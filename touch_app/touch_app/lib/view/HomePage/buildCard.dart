@@ -26,9 +26,10 @@ class buildCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
             image: DecorationImage(
-              image: AssetImage(data['image']),
+              image: AssetImage(data['image'].toString()),
               fit: BoxFit.cover,
             ),
+            
             boxShadow: const [
               BoxShadow(
                 offset: Offset(0, 4),
@@ -46,7 +47,6 @@ class buildCard extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-      
         RatingBarIndicator(
           rating: 4.0,
           itemBuilder: (context, index) => const Icon(

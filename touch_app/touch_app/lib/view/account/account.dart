@@ -292,8 +292,8 @@ class _AccountPageState extends State<AccountPage> {
                 Navigator.pop(context);
               },
             ),
-            title: const Text(
-              "Tài khoản",
+            title: Text(
+              user != null ? user['fullname'] : "fullname",
               style: TextStyle(color: kColor),
             ),
             backgroundColor: Colors.white,
@@ -450,7 +450,7 @@ class _AccountPageState extends State<AccountPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            'assets/images/adidas-sport-pant.jpg',
+                                            products[0]['image'].toString(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -568,7 +568,7 @@ class _AccountPageState extends State<AccountPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            'assets/images/adidas-sport-pant.jpg',
+                                            products[0]['image'].toString(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),

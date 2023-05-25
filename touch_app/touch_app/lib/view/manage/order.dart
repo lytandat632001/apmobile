@@ -197,11 +197,11 @@ class _OrderPageState extends State<OrderPage> {
                 children: [
                   SizedBox(
                       width: size.width,
-                      height: size.height * 0.7,
+                      height: size.height * 0.8,
                       child: TabBarView(children: [
                         SizedBox(
                           width: size.width,
-                          height: size.height * 0.6,
+                          height: size.height * 0.8,
                           child: ListView.builder(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
@@ -234,7 +234,7 @@ class _OrderPageState extends State<OrderPage> {
                               return Container(
                                 margin: EdgeInsets.only(top: 10),
                                 width: size.width,
-                                height: size.height * 0.2,
+                                height: size.height * 0.25,
                                 child: Row(children: [
                                   Container(
                                     margin: EdgeInsets.all(8.0),
@@ -243,7 +243,7 @@ class _OrderPageState extends State<OrderPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            'assets/images/adidas-sport-pant.jpg',
+                                            products[0]['image'].toString(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -258,13 +258,15 @@ class _OrderPageState extends State<OrderPage> {
                                   Container(
                                     margin:
                                         EdgeInsets.only(top: 10.0, left: 10),
-                                    width: size.width * 0.5,
+                                    width: size.width * 0.55,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
+                                        Text(
+                                            'User: ${checkouts['idUser'].toString()}'),
                                         Text(products[0]['title'].toString()),
                                         Row(
                                           mainAxisAlignment:
@@ -363,7 +365,7 @@ class _OrderPageState extends State<OrderPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            'assets/images/adidas-sport-pant.jpg',
+                                            products[0]['image'].toString(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -483,7 +485,7 @@ class _OrderPageState extends State<OrderPage> {
                                         color: Colors.red,
                                         image: DecorationImage(
                                           image: AssetImage(
-                                            'assets/images/adidas-sport-pant.jpg',
+                                            products[0]['image'].toString(),
                                           ),
                                           fit: BoxFit.cover,
                                         ),

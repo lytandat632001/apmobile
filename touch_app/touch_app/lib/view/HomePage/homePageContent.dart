@@ -102,7 +102,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Men',
+                            'Nam',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -117,7 +117,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   ));
                             },
                             child: const Text(
-                              "See all",
+                              "Mới",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Women',
+                            'Nữ',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -187,7 +187,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   ));
                             },
                             child: const Text(
-                              "See all",
+                              "Mới",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -240,7 +240,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            "Children",
+                            "Trẻ em",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -258,7 +258,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   ));
                             },
                             child: const Text(
-                              "See all",
+                              "Mới",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class _HomePageContentState extends State<HomePageContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            "Accessories",
+                            "Phụ kiện",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -319,7 +319,6 @@ class _HomePageContentState extends State<HomePageContent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('See all');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -329,7 +328,7 @@ class _HomePageContentState extends State<HomePageContent> {
                                   ));
                             },
                             child: const Text(
-                              "See all",
+                              "Mới",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

@@ -102,7 +102,6 @@ class _ListEditProductState extends State<ListEditProduct> {
                     childAspectRatio: 0.67, crossAxisCount: 2),
                 itemBuilder: (context, index) {
                   dynamic current = products[index];
-                  bool containsLike = itemsOnLikes.contains(current);
 
                   return GestureDetector(
                     onTap: () {

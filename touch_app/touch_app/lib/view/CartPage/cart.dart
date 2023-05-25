@@ -141,11 +141,11 @@ class _CartPageState extends State<CartPage> {
 
   double calculateShipping() {
     double shipping = 0.0;
-    if (calculateTotalPrice() > 20) {
+    if (calculateTotalPrice() > 2000000) {
       shipping = 0.0;
       return shipping;
     } else {
-      shipping = 30;
+      shipping = 30000;
       return shipping;
     }
   }
@@ -182,6 +182,20 @@ class _CartPageState extends State<CartPage> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userId = userProvider.userId;
     final token = userProvider.token;
+    String formattedTotal = (calculateTotalPrice() + calculateShipping())
+        .toString()
+        .split('.')[0]; // Lấy phần nguyên
+    // Thêm dấu chấm ngăn cách hàng nghìn
+    final patternTotal = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    formattedTotal = formattedTotal.replaceAllMapped(
+        patternTotal, (match) => '${match.group(1)}.');
+
+    String formattedShipping =
+        calculateShipping().toString().split('.')[0]; // Lấy phần nguyên
+    // Thêm dấu chấm ngăn cách hàng nghìn
+    final patternShipping = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    formattedShipping = formattedShipping.replaceAllMapped(
+        patternShipping, (match) => '${match.group(1)}.');
 
     return Scaffold(
       body: SizedBox(
@@ -201,6 +215,22 @@ class _CartPageState extends State<CartPage> {
                       itemBuilder: (context, index) {
                         var current = filteredList[index];
                         int quantity = cartIdUser[index]['quantity'];
+                        String formattedPrice =
+                            current['price'].split('.')[0]; // Lấy phần nguyên
+                        // Thêm dấu chấm ngăn cách hàng nghìn
+                        final pattern = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                        formattedPrice = formattedPrice.replaceAllMapped(
+                            pattern, (match) => '${match.group(1)}.');
+
+                        String formattedPriceBase = current['priceBase']
+                            .split('.')[0]; // Lấy phần nguyên
+                        // Thêm dấu chấm ngăn cách hàng nghìn
+                        final patternBase =
+                            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                        formattedPriceBase =
+                            formattedPriceBase.replaceAllMapped(
+                                patternBase, (match) => '${match.group(1)}.');
+
                         return Container(
                           margin: const EdgeInsets.all(8),
                           // margin: const EdgeInsets.only(top: 8),
@@ -254,11 +284,11 @@ class _CartPageState extends State<CartPage> {
                                         ],
                                       ),
                                     ),
-                                    Text('₫${current['price']}'),
+                                    Text('₫$formattedPrice'),
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text('₫${current['priceBase']}'),
+                                    Text('₫$formattedPriceBase'),
                                     const SizedBox(
                                       height: 5,
                                     ),
@@ -411,7 +441,7 @@ class _CartPageState extends State<CartPage> {
                               color: Colors.black),
                         ),
                         Text(
-                          calculateShipping().toString(),
+                          formattedShipping.toString(),
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
@@ -433,8 +463,7 @@ class _CartPageState extends State<CartPage> {
                               color: Colors.black),
                         ),
                         Text(
-                          (calculateTotalPrice() + calculateShipping())
-                              .toString(),
+                          formattedTotal,
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,

@@ -17,6 +17,15 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   List<dynamic> products = [];
+  List<dynamic> men = [];
+  List<dynamic> women = [];
+  List<dynamic> children = [];
+  List<dynamic> accessories = [];
+  bool showAll = true;
+  bool showMen = false;
+  bool showWomen = false;
+  bool showChildren = false;
+  bool showAccessories = false;
 
   Future<void> fetchProducts() async {
     var apiUrl = 'https://api-datly.phamthanhnam.com/api/products/';
@@ -28,6 +37,14 @@ class _ExplorePageState extends State<ExplorePage> {
         setState(() {
           products = jsonDecode(response.body);
         });
+
+        men = products.where((product) => product['idCategory'] == 1).toList();
+        women =
+            products.where((product) => product['idCategory'] == 2).toList();
+        children =
+            products.where((product) => product['idCategory'] == 3).toList();
+        accessories =
+            products.where((product) => product['idCategory'] == 4).toList();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Không thể lấy danh sách sản phẩm')),
@@ -40,6 +57,20 @@ class _ExplorePageState extends State<ExplorePage> {
     }
   }
 
+  List<dynamic> _getProductList() {
+    if (showAll) {
+      return products;
+    } else if (showMen) {
+      return men;
+    } else if (showWomen) {
+      return women;
+    } else if (showChildren) {
+      return children;
+    } else {
+      return accessories;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,8 +79,6 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     final size = MediaQuery.of(context).size;
     // itemsOnExplore = widget.data;
     return Scaffold(
@@ -69,24 +98,192 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
               ),
             ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(kBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // Giá trị bo góc của border
+                          side: BorderSide(
+                              color:
+                                  Colors.black), // Màu sắc và độ dày của border
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showAll = true;
+                        showMen = false;
+                        showWomen = false;
+                        showChildren = false;
+                        showAccessories = false;
+                      });
+                    },
+                    child: Text(
+                      'Tất cả',
+                      style: TextStyle(color: kColor),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(kBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // Giá trị bo góc của border
+                          side: BorderSide(
+                              color:
+                                  Colors.black), // Màu sắc và độ dày của border
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showAll = false;
+                        showMen = true;
+                        showWomen = false;
+                        showChildren = false;
+                        showAccessories = false;
+                      });
+                    },
+                    child: Text('Nam', style: TextStyle(color: kColor)),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(kBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // Giá trị bo góc của border
+                          side: BorderSide(
+                              color:
+                                  Colors.black), // Màu sắc và độ dày của border
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showAll = false;
+                        showMen = false;
+                        showWomen = true;
+                        showChildren = false;
+                        showAccessories = false;
+                      });
+                    },
+                    child: Text('Nữ', style: TextStyle(color: kColor)),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(kBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // Giá trị bo góc của border
+                          side: BorderSide(
+                              color:
+                                  Colors.black), // Màu sắc và độ dày của border
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showAll = false;
+                        showMen = false;
+                        showWomen = false;
+                        showChildren = true;
+                        showAccessories = false;
+                      });
+                    },
+                    child: Text('Trẻ em', style: TextStyle(color: kColor)),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(kBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // Giá trị bo góc của border
+                          side: BorderSide(
+                              color:
+                                  Colors.black), // Màu sắc và độ dày của border
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        showAll = false;
+                        showMen = false;
+                        showWomen = false;
+                        showChildren = false;
+                        showAccessories = true;
+                      });
+                    },
+                    child: Text('Phụ kiện', style: TextStyle(color: kColor)),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               width: size.width,
               height: size.height * 0.7,
               child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: products.length,
+                itemCount: _getProductList().length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 0.67, crossAxisCount: 2),
                 itemBuilder: (context, index) {
-                  dynamic current = products[index];
-                  bool containsLike = itemsOnLikes.contains(current);
+                  dynamic current = _getProductList()[index];
+
+                  String formattedPrice =
+                      current['price'].split('.')[0]; // Lấy phần nguyên
+                  // Thêm dấu chấm ngăn cách hàng nghìn
+                  final pattern = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                  formattedPrice = formattedPrice.replaceAllMapped(
+                      pattern, (match) => '${match.group(1)}.');
+
+                  String formattedPriceBase =
+                      current['priceBase'].split('.')[0]; // Lấy phần nguyên
+                  // Thêm dấu chấm ngăn cách hàng nghìn
+                  final patternBase = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+                  formattedPriceBase = formattedPriceBase.replaceAllMapped(
+                      patternBase, (match) => '${match.group(1)}.');
 
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Details(data: current,)),
+                            builder: (context) => Details(
+                                  data: current,
+                                )),
                       );
                     },
                     child: Column(
@@ -110,7 +307,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                         Text(
-                          '\$${current['price']}',
+                          '₫ $formattedPrice',
                           style: const TextStyle(
                             color: kColor,
                             fontSize: 18,
@@ -118,7 +315,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                         Text(
-                          '\$${current['priceBase']}',
+                          '₫ $formattedPriceBase',
                           style: const TextStyle(
                             color: kColor,
                             fontSize: 18,
@@ -126,7 +323,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                         ),
                         RatingBarIndicator(
-                          rating: 4.6,
+                          rating: double.parse(current['star']),
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.black87,

@@ -62,7 +62,7 @@ class _SignupContentState extends State<SignupContent> {
                         obscureText: false,
                         controller: _emailController),
                     ImputWidget(
-                        hint: 'Password',
+                        hint: 'Mật khẩu',
                         hintIcon: closeIcon,
                         obscureText: true,
                         controller: _passwordController),
@@ -92,7 +92,7 @@ class _SignupContentState extends State<SignupContent> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
               child: BottomTextView(
-                  bottomText1: 'Bạn đã có  tài khoản?',
+                  bottomText1: 'Bạn đã có tài khoản?',
                   bottomText2: ' Đăng nhập',
                   state: false),
             ),
@@ -133,96 +133,15 @@ class _SignupContentState extends State<SignupContent> {
     );
   }
 
-  // Widget signupButton(String title, bool state) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
-  //     child: ElevatedButton(
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: const Color(inputFieldColor),
-  //         padding: const EdgeInsets.symmetric(vertical: 10),
-  //         shape: const StadiumBorder(),
-  //         elevation: 10,
-  //         shadowColor: const Color(inputFieldColor),
-  //       ),
-  //       onPressed: () {
-  //         child:
-  //         Text(
-  //           title,
-  //           style: const TextStyle(
-  //             color: kColor,
-  //             fontSize: 23,
-  //             fontWeight: FontWeight.w500,
-  //           ),
-  //         );
-  //       },
-  //       child: null,
-  //       //=>  signUserUp(),
-  //     ),
-  //   );
+  // Widget forgotPassword() {
+  //   return TextButton(
+  //       onPressed: () {},
+  //       child: const Text(
+  //         'Forgot Password?',
+  //         style: TextStyle(
+  //             color: kLinkColor, fontSize: 18, fontWeight: FontWeight.w800),
+  //       ));
   // }
-
-  // Widget orDivder() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 100),
-  //     child: Row(
-  //       children: [
-  //         Flexible(
-  //           child: Container(
-  //             height: 1,
-  //             color: kPrimaryColor,
-  //           ),
-  //         ),
-  //         const Padding(
-  //           padding: EdgeInsets.symmetric(horizontal: 15),
-  //           child: Text(
-  //             'or',
-  //             style: TextStyle(
-  //               color: kColor,
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.w400,
-  //             ),
-  //           ),
-  //         ),
-  //         Flexible(
-  //           child: Container(
-  //             height: 1,
-  //             color: kPrimaryColor,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget logos() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 5),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Image.asset('assets/images/google.png', width: 40),
-  //         const SizedBox(
-  //           width: 70,
-  //         ),
-  //         Image.asset(
-  //           'assets/images/facebook.png',
-  //           width: 40,
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget forgotPassword() {
-    return TextButton(
-        onPressed: () {},
-        child: const Text(
-          'Forgot Password?',
-          style: TextStyle(
-              color: kLinkColor, fontSize: 18, fontWeight: FontWeight.w800),
-        ));
-  }
 
   void wrongEmailMessage() {
     showDialog(

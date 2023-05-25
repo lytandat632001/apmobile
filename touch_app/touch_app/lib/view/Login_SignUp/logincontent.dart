@@ -16,7 +16,6 @@ class LoginContentNew extends StatefulWidget {
   const LoginContentNew({
     Key? key,
   }) : super(key: key);
-  
 
   @override
   State<LoginContentNew> createState() => _LoginContentNewState();
@@ -26,8 +25,6 @@ class _LoginContentNewState extends State<LoginContentNew> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String? errorMessage;
-  String bottomText1 = 'Don\'t have an account?';
-  String bottomText2 = 'Sign Up';
   String title = 'Welcome\nBack';
 
   Widget forgotPassword() {
@@ -63,7 +60,7 @@ class _LoginContentNewState extends State<LoginContentNew> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 100),
+            padding: const EdgeInsets.only(top: 90),
             child: Stack(children: <Widget>[
               Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,24 +72,23 @@ class _LoginContentNewState extends State<LoginContentNew> {
                         obscureText: false,
                         controller: _emailController),
                     ImputWidget(
-                        hint: 'Password',
+                        hint: 'Mật khẩu',
                         hintIcon: closeIcon,
                         obscureText: true,
                         controller: _passwordController),
                     LoginButtonWidget(
-                      title: 'Log In',
-                 
+                      title: 'Đăng nhập',
                       emailController: _emailController,
                       passwordController: _passwordController,
                     ),
-                    forgotPassword(),
+                    // forgotPassword(),
                   ]),
             ]),
           ),
           const Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: 40),
               child: BottomTextView(
                 bottomText1: 'Bạn chưa có tài khoản?',
                 bottomText2: ' Đăng ký',

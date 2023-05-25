@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,18 +9,19 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  /// Variables
-  late File imageFile;
+  File? imageFile;
+  String? imageBase64;
 
-  /// Widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Image Picker"),
-        ),
-        body: Container(
-            child: imageFile == null
+      appBar: AppBar(
+        title: Text("Image Picker"),
+      ),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            imageFile == null
                 ? Container(
                     alignment: Alignment.center,
                     child: Column(
@@ -31,9 +33,7 @@ class _MyPageState extends State<MyPage> {
                           },
                           child: Text("PICK FROM GALLERY"),
                         ),
-                        Container(
-                          height: 40.0,
-                        ),
+                        SizedBox(height: 40.0),
                         TextButton(
                           onPressed: () {
                             _getFromCamera();
@@ -43,15 +43,35 @@ class _MyPageState extends State<MyPage> {
                       ],
                     ),
                   )
-                : Container(
-                    child: Image.file(
-                      imageFile,
-                      fit: BoxFit.cover,
-                    ),
-                  )));
+                : Column(
+                    children: <Widget>[
+                      Image.file(
+                        imageFile!,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 20.0),
+                      TextButton(
+                        onPressed: () {
+                          _convertToBase64();
+                        },
+                        child: Text("CONVERT TO BASE64"),
+                      ),
+                      if (imageBase64 != null)
+                        Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                            imageBase64!,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
+                  ),
+          ],
+        ),
+      ),
+    );
   }
 
-  /// Get from gallery
   _getFromGallery() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
@@ -61,11 +81,11 @@ class _MyPageState extends State<MyPage> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        imageBase64 = null; // Reset base64 when selecting a new image
       });
     }
   }
 
-  /// Get from Camera
   _getFromCamera() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,
@@ -75,6 +95,17 @@ class _MyPageState extends State<MyPage> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        imageBase64 = null; // Reset base64 when selecting a new image
+      });
+    }
+  }
+
+  _convertToBase64() async {
+    if (imageFile != null) {
+      List<int> imageBytes = await imageFile!.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+      setState(() {
+        imageBase64 = base64Image;
       });
     }
   }

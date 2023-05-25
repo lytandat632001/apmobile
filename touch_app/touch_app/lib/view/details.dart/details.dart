@@ -137,20 +137,21 @@ class _DetailsState extends State<Details> {
         'code': cartIdUser[0]['code']
       }),
     );
-    
   }
 
-  Future<void> postCart(int? userId, int idProduct, int quantity) async {
+  Future<void> postCart(
+      int? userId, int idProduct, int quantity, String size) async {
     final response = await http.post(
       Uri.parse('https://api-datly.phamthanhnam.com/api/carts/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, int?>{
+      body: jsonEncode({
         'quantity': quantity,
         'idUser': userId,
         'idProduct': idProduct,
-        'code': 1
+        'code': 1,
+        'size': size
       }),
     );
 
@@ -190,14 +191,27 @@ class _DetailsState extends State<Details> {
       );
     }
     dynamic current = widget.data;
-    bool contains = itemsOnCart.contains(current);
+    // bool contains = itemsOnCart.contains(current);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userId = userProvider.userId;
     final token = userProvider.token;
 
+    String formattedPrice = current['price'].split('.')[0]; // Lấy phần nguyên
+    // Thêm dấu chấm ngăn cách hàng nghìn
+    final pattern = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    formattedPrice = formattedPrice.replaceAllMapped(
+        pattern, (match) => '${match.group(1)}.');
+
+    String formattedPriceBase =
+        current['priceBase'].split('.')[0]; // Lấy phần nguyên
+    // Thêm dấu chấm ngăn cách hàng nghìn
+    final patternBase = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    formattedPriceBase = formattedPriceBase.replaceAllMapped(
+        patternBase, (match) => '${match.group(1)}.');
+
     final size = MediaQuery.of(context).size;
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-
+    var selectedSize = sizes[2];
     return Scaffold(
       backgroundColor: kBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -281,7 +295,7 @@ class _DetailsState extends State<Details> {
                         ),
                         Row(
                           children: [
-                            Text('₫${current['price']}',
+                            Text('₫$formattedPrice',
                                 style: const TextStyle(
                                     fontSize: 20, color: kColor)),
                             const SizedBox(width: 40),
@@ -295,7 +309,7 @@ class _DetailsState extends State<Details> {
                           padding: const EdgeInsets.only(top: 10, bottom: 20),
                           child: Row(
                             children: [
-                              Text('₫${current['priceBase']}',
+                              Text('₫$formattedPriceBase',
                                   style: const TextStyle(
                                       fontSize: 20, color: kColor)),
                               const SizedBox(width: 40),
@@ -362,7 +376,9 @@ class _DetailsState extends State<Details> {
                                   var current = sizes[index];
                                   return GestureDetector(
                                     onTap: () {
-                                      setState(() {});
+                                      setState(() {
+                                        selectedSize = current;
+                                      });
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -370,7 +386,7 @@ class _DetailsState extends State<Details> {
                                       child: AnimatedContainer(
                                         width: size.width * 0.12,
                                         decoration: BoxDecoration(
-                                          color: selectedSize == index
+                                          color: selectedSize == current
                                               ? kLinkColor
                                               : kBackgroundColor,
                                           border: Border.all(
@@ -386,7 +402,7 @@ class _DetailsState extends State<Details> {
                                             style: TextStyle(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.w500,
-                                                color: selectedSize == index
+                                                color: selectedSize == current
                                                     ? Colors.white
                                                     : Colors.black),
                                           ),
@@ -421,7 +437,8 @@ class _DetailsState extends State<Details> {
                                   messageText =
                                       "Sản phẩm đã tồn tại trong giỏ hàng!";
                                 } else {
-                                  postCart(userId, current['idProduct'], value);
+                                  postCart(userId, current['idProduct'], value,
+                                      selectedSize);
                                   messageText =
                                       "Sản phẩm đã được thêm vào giỏ hàng!";
                                 }

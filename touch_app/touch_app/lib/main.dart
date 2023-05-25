@@ -27,9 +27,9 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: kBackgroundColor,
         textTheme: Theme.of(context).textTheme.apply(bodyColor: kColor),
-        //  fontFamily: GoogleFonts.roboto(fontSize: 16).toString(),
       ),
-      home: MyPage(),
+      home: SplashView(),
     );
   }
 }
+
