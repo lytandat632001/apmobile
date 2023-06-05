@@ -34,6 +34,7 @@ class _SignupContentState extends State<SignupContent> {
   Widget build(BuildContext context) {
     // const currentScreen = Screens.createAccount;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: kBackgroundColor,
       body: Stack(
         children: [
