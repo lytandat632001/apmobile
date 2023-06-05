@@ -183,7 +183,7 @@ class _LikePageState extends State<LikePage> {
           'idUser': userId,
           'idProduct': idProduct,
           'code': 1,
-          'size': cartIdUser[index]['size']
+          'size': likeIdUser[index]['size']
         }),
       );
 

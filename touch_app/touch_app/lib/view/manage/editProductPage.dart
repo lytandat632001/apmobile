@@ -132,6 +132,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     hintIcon: closeIcon,
                     obscureText: false,
                     controller: price),
+                    
                 ImputWidget(
                     hint: widget.data != null
                         ? widget.data['priceBase']

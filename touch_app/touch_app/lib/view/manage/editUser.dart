@@ -79,40 +79,41 @@ class _EditUserState extends State<EditUser> {
       }
     }
 
-    // Future<void> ChangePassword() async {
+    Future<void> changePassword() async {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.userId;
+      final token = userProvider.token;
+      try {
+        final url = 'https://api-datly.phamthanhnam.com/api/users/$userId';
 
-    //   final url =
-    //       'https://api-datly.phamthanhnam.com/api/users/$userId/$passwordCurrcent';
+        final body = {'password': _passwordController.text}.toString();
 
-    //   final body = {'password': passwordCurrcent};
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        };
 
-    //   final headers = {
-    //     'Content-Type': 'application/json',
+        final response = await http.put(
+          Uri.parse(url),
+          headers: headers,
+          body: jsonEncode(body),
+        );
 
-    //   };
-
-    //   try {
-    //     final response = await http.put(
-    //       Uri.parse(url),
-    //       headers: headers,
-    //       body: jsonEncode(body),
-    //     );
-
-    //     if (response.statusCode == 200) {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text('Cập nhật thành công')),
-    //       );
-    //     } else {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
-    //       );
-    //     }
-    //   } catch (error) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Đã xảy ra lỗi')),
-    //     );
-    //   }
-    // }
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cập nhật thành công')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Không thể cập nhật thông tin tài khoản')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đã xảy ra lỗi')),
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -144,22 +145,6 @@ class _EditUserState extends State<EditUser> {
             children: [
               Text(widget.data != null ? widget.data['email'] : 'Kh lay dc',
                   style: const TextStyle(color: kColor, fontSize: 22)),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
-                child: Container(
-                  height: size.height * 0.6,
-                  width: size.width,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(width: 0.3, color: Colors.black))),
-                  child: Column(
-                    children: [
-                      Text("Đơn đặt hàng",
-                          style: TextStyle(color: kColor, fontSize: 22))
-                    ],
-                  ),
-                ),
-              ),
               SizedBox(
                 width: size.width,
                 child: SingleChildScrollView(
@@ -245,9 +230,8 @@ class _EditUserState extends State<EditUser> {
                                 shadowColor: const Color(inputFieldColor),
                               ),
                               onPressed: () {
-                                //    ChangePassword();
+                                changePassword();
                               },
-                              // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                               child: const Text(
                                 "Thay đổi mật khẩu",
                                 style: TextStyle(

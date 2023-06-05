@@ -154,11 +154,6 @@ class _AddProductState extends State<AddProduct> {
                     hintIcon: closeIcon,
                     obscureText: false,
                     controller: description),
-                // ImputWidget(
-                //     hint: 'Hình ảnh',
-                //     hintIcon: closeIcon,
-                //     obscureText: false,
-                //     controller: image),
                 ImputWidget(
                     hint: "price",
                     hintIcon: closeIcon,
