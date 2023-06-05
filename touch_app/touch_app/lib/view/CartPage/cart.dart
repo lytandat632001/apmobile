@@ -292,7 +292,8 @@ class _CartPageState extends State<CartPage> {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text('Kích cỡ: ${sizes[2]}'),
+                                    Text(
+                                        'Kích cỡ: ${cartIdUser[index]['size']}'),
                                     const SizedBox(
                                       height: 5,
                                     ),

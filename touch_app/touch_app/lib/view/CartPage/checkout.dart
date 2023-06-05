@@ -27,7 +27,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   bool isFetching = true;
-  Future<void> postCheckout(int idCart, double shipping) async {
+  Future<void> postCheckout(int idCart, String shipping) async {
     DateTime now = DateTime.now();
     var mysqlDateTime = DateFormat('yyyy/MM/dd').format(now);
     print(widget.idUser);
@@ -44,7 +44,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         "idStatus": 2,
         "idUser": widget.idUser,
         "total": widget.total,
-        "idShipping": shipping.toString(),
+        "idShipping": shipping,
         "dateBuy": mysqlDateTime,
         "type": "Thanh toán khi nhận hàng",
         "idCart": idCart
@@ -59,21 +59,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   Future<http.Response> updateCart(
-    int idUser,
-    int idProduct,
-    int quantity,
-    int idCart,
-  ) {
+      int idUser, int idProduct, int quantity, int idCart, String size) {
     return http.put(
       Uri.parse('https://api-datly.phamthanhnam.com/api/carts/$idCart'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, int>{
+      body: jsonEncode({
         'idUser': idUser,
         'idProduct': idProduct,
         'quantity': quantity,
         'code': 2,
+        'size': size
       }),
     );
   }
@@ -346,13 +343,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   element['idUser'],
                                   element['idProduct'],
                                   element['quantity'],
-                                  element['idCart']);
-                              print(element['idUser']);
-                              print(element['idProduct']);
-                              print(element['quantity']);
-                              print(element['idCart']);
-                              postCheckout(element['idCart'],
-                                  double.parse(address.text));
+                                  element['idCart'],
+                                  element['size']);
+                            
+                              postCheckout(element['idCart'], address.text);
                             }
                             Navigator.pushReplacement(
                                 context,

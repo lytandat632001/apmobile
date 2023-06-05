@@ -21,6 +21,7 @@ class _ExplorePageState extends State<ExplorePage> {
   List<dynamic> women = [];
   List<dynamic> children = [];
   List<dynamic> accessories = [];
+  List<dynamic> filteredProducts = [];
   bool showAll = true;
   bool showMen = false;
   bool showWomen = false;
@@ -61,14 +62,45 @@ class _ExplorePageState extends State<ExplorePage> {
     if (showAll) {
       return products;
     } else if (showMen) {
-      return men;
+      return men =
+          products.where((product) => product['idCategory'] == 1).toList();
     } else if (showWomen) {
-      return women;
+      return women =
+          products.where((product) => product['idCategory'] == 2).toList();
     } else if (showChildren) {
-      return children;
+      return children =
+          products.where((product) => product['idCategory'] == 3).toList();
+    } else if (showAccessories) {
+      return accessories =
+          products.where((product) => product['idCategory'] == 4).toList();
     } else {
-      return accessories;
+      return filteredProducts;
     }
+  }
+
+  void searchProducts(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        // Nếu giá trị tìm kiếm rỗng, hiển thị tất cả sản phẩm
+        showAll = true;
+        showMen = false;
+        showWomen = false;
+        showChildren = false;
+        showAccessories = false;
+      } else if (query.isNotEmpty) {
+        // Lọc danh sách sản phẩm dựa trên giá trị tìm kiếm
+        showAll = false;
+        showMen = false;
+        showWomen = false;
+        showChildren = false;
+        showAccessories = false;
+
+        filteredProducts = products.where((product) {
+          String title = product['title'].toString().toLowerCase();
+          return title.contains(query.toLowerCase());
+        }).toList();
+      }
+    });
   }
 
   @override
@@ -80,22 +112,32 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // itemsOnExplore = widget.data;
+    String hintText = 'Tìm kiếm sản phẩm';
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Center(
+            Center(
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Tìm kiếm sản phẩm',
+                  hintText: hintText,
                   prefixIcon: Icon(
                     Icons.search,
                     color: kColor,
                     size: 30,
                   ),
                 ),
+                onChanged: (value) {
+                  // Gọi hàm tìm kiếm ở đây
+                  setState(() {
+                    hintText = value.isEmpty
+                        ? 'Tìm kiếm sản phẩm'
+                        : 'Đang tìm kiếm: $value';
+                    searchProducts(value);
+                  });
+                },
               ),
             ),
             SingleChildScrollView(

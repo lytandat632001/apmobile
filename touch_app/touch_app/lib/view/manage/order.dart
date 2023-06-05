@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:touch_app/utils/constants.dart';
-import 'package:touch_app/utils/icons.dart';
+
 import 'package:touch_app/utils/userProvider.dart';
 import 'package:intl/intl.dart';
-import '../Login_SignUp/inputWidget.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -79,12 +78,6 @@ class _OrderPageState extends State<OrderPage> {
                   itemA['idCart'] == itemB['idCart'] && itemB['code'] == 2))
               .toList();
 
-          print(filteredListCart1);
-          print(filteredListCart2);
-          print(filteredListCart3);
-
-          //   cartIdUser = cartList.where((cart) => cart['idUser'] == userId).toList();
-          // bool isFetching = false;
           filteredListProduct1 = productList
               .where((itemB) => filteredListCart1
                   .any((itemA) => itemA['idProduct'] == itemB['idProduct']))
@@ -98,9 +91,6 @@ class _OrderPageState extends State<OrderPage> {
                   .any((itemA) => itemA['idProduct'] == itemB['idProduct']))
               .toList();
         });
-        print(filteredListProduct1);
-        print(filteredListProduct2);
-        print(filteredListProduct3);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(' Đã lấy danh sách sản phẩm')),
@@ -118,7 +108,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<http.Response> updateCheckout(int idCheckout, double total,
-      double shipping, int idCart, String dateBuy, int idUser, int status) {
+      String shipping, int idCart, String dateBuy, int idUser, int status) {
     return http.put(
       Uri.parse('https://api-datly.phamthanhnam.com/api/checkouts/$idCheckout'),
       headers: <String, String>{
@@ -272,8 +262,14 @@ class _OrderPageState extends State<OrderPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                                'Số lượng: ${carts['quantity']}'),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                    'Số lượng: ${carts['quantity']}'),
+                                                Text(
+                                                    'Kích cỡ: ${carts['size']}'),
+                                              ],
+                                            ),
                                             Container(
                                               decoration: BoxDecoration(
                                                   border:
@@ -287,8 +283,7 @@ class _OrderPageState extends State<OrderPage> {
                                                             .toString()),
                                                         double.parse(
                                                             checkouts['total']),
-                                                        double.parse(checkouts[
-                                                            'idShipping']),
+                                                        checkouts['idShipping'],
                                                         int.parse(
                                                             checkouts['idCart']
                                                                 .toString()),
@@ -392,8 +387,14 @@ class _OrderPageState extends State<OrderPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                                'Số lượng: ${carts['quantity']}'),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                    'Số lượng: ${carts['quantity']}'),
+                                                Text(
+                                                    'Kích cỡ: ${carts['size']}'),
+                                              ],
+                                            ),
                                             Container(
                                               decoration: BoxDecoration(
                                                   border:
@@ -407,8 +408,7 @@ class _OrderPageState extends State<OrderPage> {
                                                             .toString()),
                                                         double.parse(
                                                             checkouts['total']),
-                                                        double.parse(checkouts[
-                                                            'idShipping']),
+                                                        checkouts['idShipping'],
                                                         int.parse(
                                                             checkouts['idCart']
                                                                 .toString()),
@@ -509,6 +509,7 @@ class _OrderPageState extends State<OrderPage> {
                                       children: [
                                         Text(products[0]['title'].toString()),
                                         Text('Số lượng: ${carts['quantity']}'),
+                                        Text('Kích cỡ: ${carts['size']}'),
                                         Text(
                                             'Giá: ${products[0]['priceBase']}'),
                                         Text(

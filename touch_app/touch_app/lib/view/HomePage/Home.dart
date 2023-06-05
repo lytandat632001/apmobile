@@ -78,7 +78,8 @@ class _HomeProductState extends State<HomeProduct> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: SearchCustom(products));
+              showSearch(
+                  context: context, delegate: CustomSearchDelegate(products));
             },
             icon: const Icon(FontAwesomeIcons.magnifyingGlass),
             iconSize: 20,

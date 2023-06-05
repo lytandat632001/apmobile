@@ -156,33 +156,34 @@ class _LikePageState extends State<LikePage> {
     }
 
     Future<http.Response> updateCarts(int value) {
-      int idCart = cartIdUser[0]['idCart'];
+      int idCart = cartIdUser[value]['idCart'];
       return http.put(
         Uri.parse('https://api-datly.phamthanhnam.com/api/carts/$idCart'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, int>{
-          'quantity': cartIdUser[0]['quantity'] + value,
-          'idUser': cartIdUser[0]['idUser'],
-          'idProduct': cartIdUser[0]['idProduct'],
-          'code': cartIdUser[0]['code']
+        body: jsonEncode({
+          'quantity': cartIdUser[value]['quantity'] + 1,
+          'idUser': cartIdUser[value]['idUser'],
+          'idProduct': cartIdUser[value]['idProduct'],
+          'code': cartIdUser[value]['code'],
+          'size': cartIdUser[value]['size']
         }),
       );
     }
 
-    Future<void> postCart(int? userId, int idProduct, int quantity) async {
+    Future<void> postCart(int? userId, int idProduct, int index) async {
       final response = await http.post(
         Uri.parse('https://api-datly.phamthanhnam.com/api/carts/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
-          'quantity': quantity,
+          'quantity': 1,
           'idUser': userId,
           'idProduct': idProduct,
           'code': 1,
-          'size': 1
+          'size': cartIdUser[index]['size']
         }),
       );
 
@@ -208,9 +209,6 @@ class _LikePageState extends State<LikePage> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 10),
               child: Container(
-                //color: Colors.blue,
-                // decoration: BoxDecoration(
-                //     border: Border.all(width: 0.5, color: kPrimaryColor)),
                 width: size.width,
                 height: size.height * 0.76,
                 child: filteredList.isNotEmpty
@@ -302,7 +300,8 @@ class _LikePageState extends State<LikePage> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text('Kích cỡ: ${sizes[2]}'),
+                                      Text(
+                                          'Kích cỡ: ${likeIdUser[index]['size']}'),
                                       const SizedBox(
                                         height: 5,
                                       ),

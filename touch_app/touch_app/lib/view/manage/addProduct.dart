@@ -90,51 +90,6 @@ class _AddProductState extends State<AddProduct> {
       }
     }
 
-    // Future<void> _getFromGallery() async {
-    //   final picker = ImagePicker();
-    //   final pickedFile = await picker.pickImage(
-    //     source: ImageSource.gallery,
-    //     maxWidth: 720,
-    //     maxHeight: 720,
-    //   );
-
-    //   if (pickedFile != null) {
-    //     setState(() {
-    //       imageFile = File(pickedFile.path);
-    //       imageBase64 = base64Encode(imageFile!.readAsBytesSync());
-    //     });
-    //   }
-    // }
-
-    // Future<void> _getFromGallery() async {
-    //   PickedFile? pickedFile = await ImagePicker().getImage(
-    //     source: ImageSource.gallery,
-    //     maxWidth: 1800,
-    //     maxHeight: 1800,
-    //   );
-    //   if (pickedFile != null) {
-    //     setState(() {
-    //       imageFile = File(pickedFile.path);
-
-    //       imageBase64 = base64Encode(imageFile!
-    //           .readAsBytesSync()); // Reset base64 when selecting a new image
-    //     });
-    //   }
-    // }
-
-// _getFromGallery() async {
-//     PickedFile? pickedFile = await ImagePicker().getImage(
-//       source: ImageSource.gallery,
-//       maxWidth: 1800,
-//       maxHeight: 1800,
-//     );
-//     if (pickedFile != null) {
-//       setState(() {
-//         imageFile = File(pickedFile.path);
-//         imageBase64 = null; // Reset base64 when selecting a new image
-//       });
-//     }
-//   }
     _getFromGallery() async {
       PickedFile? pickedFile = await ImagePicker().getImage(
         source: ImageSource.gallery,

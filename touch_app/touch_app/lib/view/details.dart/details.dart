@@ -130,11 +130,12 @@ class _DetailsState extends State<Details> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, int>{
+      body: jsonEncode({
         'quantity': cartIdUser[0]['quantity'] + value,
         'idUser': cartIdUser[0]['idUser'],
         'idProduct': cartIdUser[0]['idProduct'],
-        'code': cartIdUser[0]['code']
+        'code': cartIdUser[0]['code'],
+        'size': cartIdUser[0]['size']
       }),
     );
   }
@@ -211,7 +212,7 @@ class _DetailsState extends State<Details> {
 
     final size = MediaQuery.of(context).size;
     List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-    var selectedSize = sizes[2];
+    // var selectedSize = sizes[2];
     return Scaffold(
       backgroundColor: kBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -289,6 +290,7 @@ class _DetailsState extends State<Details> {
                                 idUser: userId,
                                 idProduct: current['idProduct'],
                                 idLike: idLike,
+                                size: sizes[selectedSize],
                               ),
                             ],
                           ),
@@ -377,7 +379,7 @@ class _DetailsState extends State<Details> {
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        selectedSize = current;
+                                        selectedSize = index;
                                       });
                                     },
                                     child: Padding(
@@ -386,7 +388,7 @@ class _DetailsState extends State<Details> {
                                       child: AnimatedContainer(
                                         width: size.width * 0.12,
                                         decoration: BoxDecoration(
-                                          color: selectedSize == current
+                                          color: selectedSize == index
                                               ? kLinkColor
                                               : kBackgroundColor,
                                           border: Border.all(
@@ -430,7 +432,7 @@ class _DetailsState extends State<Details> {
                             onPressed: () {
                               String messageText;
                               setState(() {
-                                // AddToCart.addToCart(current, context);
+                                print(sizes[selectedSize]);
                                 print(isCart);
                                 if (isCart == true) {
                                   updateCarts(value);
@@ -438,7 +440,7 @@ class _DetailsState extends State<Details> {
                                       "Sản phẩm đã tồn tại trong giỏ hàng!";
                                 } else {
                                   postCart(userId, current['idProduct'], value,
-                                      selectedSize);
+                                      sizes[selectedSize]);
                                   messageText =
                                       "Sản phẩm đã được thêm vào giỏ hàng!";
                                 }
@@ -528,7 +530,7 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               RatingBarIndicator(
-                                rating: 4.5,
+                                rating: double.parse(current['star']),
                                 itemBuilder: (context, index) => const Icon(
                                   Icons.star,
                                   color: Colors.black87,

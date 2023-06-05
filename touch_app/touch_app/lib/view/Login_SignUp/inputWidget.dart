@@ -33,11 +33,6 @@ class _ImputWidgetState extends State<ImputWidget> {
           borderRadius: BorderRadius.circular(20),
           shadowColor: Colors.black87,
           child: TextField(
-            // onChanged: (value) {
-            //   hintText = value;
-            //   print(hintText);
-            // },
-
             controller: widget.controller,
             obscureText: widget.obscureText,
             textAlignVertical: TextAlignVertical.bottom,

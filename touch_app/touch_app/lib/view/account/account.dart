@@ -7,6 +7,7 @@ import 'package:touch_app/utils/constants.dart';
 import 'package:touch_app/utils/icons.dart';
 import 'package:touch_app/utils/userProvider.dart';
 import 'package:intl/intl.dart';
+import 'package:touch_app/view/Login_SignUp/logincontent.dart';
 import '../Login_SignUp/inputWidget.dart';
 
 class AccountPage extends StatefulWidget {
@@ -218,22 +219,20 @@ class _AccountPageState extends State<AccountPage> {
       }
     }
 
-    Future<void> ChangePassword() async {
+    Future<void> changePassword() async {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final userId = userProvider.userId;
       final token = userProvider.token;
-
-      final url =
-          'https://api-datly.phamthanhnam.com/api/users/$userId/$passwordCurrcent';
-
-      final body = {'password': passwordCurrcent};
-
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
       try {
+        final url = 'https://api-datly.phamthanhnam.com/api/users/$userId';
+
+        final body = {'password': _passwordController.text}.toString();
+
+        final headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        };
+
         final response = await http.put(
           Uri.parse(url),
           headers: headers,
@@ -257,7 +256,7 @@ class _AccountPageState extends State<AccountPage> {
     }
 
     Future<http.Response> updateCheckout(int idCheckout, double total,
-        double shipping, int idCart, String dateBuy, int idUser, int status) {
+        String shipping, int idCart, String dateBuy, int idUser, int status) {
       return http.put(
         Uri.parse(
             'https://api-datly.phamthanhnam.com/api/checkouts/$idCheckout'),
@@ -391,6 +390,7 @@ class _AccountPageState extends State<AccountPage> {
                                       children: [
                                         Text(products[0]['title'].toString()),
                                         Text('Số lượng: ${carts['quantity']}'),
+                                        Text('Kích cỡ: ${carts['size']}'),
                                         Text(
                                             'Giá: ${products[0]['priceBase']}'),
                                         Text(
@@ -477,8 +477,16 @@ class _AccountPageState extends State<AccountPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                                'Số lượng: ${carts['quantity']}'),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    'Số lượng: ${carts['quantity']}'),
+                                                Text(
+                                                    'Kích cỡ: ${carts['size']}'),
+                                              ],
+                                            ),
                                             Container(
                                               decoration: BoxDecoration(
                                                   border:
@@ -492,8 +500,7 @@ class _AccountPageState extends State<AccountPage> {
                                                             .toString()),
                                                         double.parse(
                                                             checkouts['total']),
-                                                        double.parse(checkouts[
-                                                            'idShipping']),
+                                                        checkouts['idShipping'],
                                                         int.parse(
                                                             checkouts['idCart']
                                                                 .toString()),
@@ -592,6 +599,7 @@ class _AccountPageState extends State<AccountPage> {
                                       children: [
                                         Text(products[0]['title'].toString()),
                                         Text('Số lượng: ${carts['quantity']}'),
+                                        Text('Kích cỡ: ${carts['size']}'),
                                         Text(
                                             'Giá: ${products[0]['priceBase']}'),
                                         Text(
@@ -688,11 +696,38 @@ class _AccountPageState extends State<AccountPage> {
                                     shadowColor: const Color(inputFieldColor),
                                   ),
                                   onPressed: () {
-                                    ChangePassword();
+                                    changePassword();
+                                    print(_passwordController.text);
                                   },
-                                  // onPressed: () => widget.state ==true ? logUserIn(context,widget.emailController,widget.passwordController):signUserUp(context,widget.emailController,widget.passwordController),
                                   child: const Text(
                                     "Thay đổi mật khẩu",
+                                    style: TextStyle(
+                                      color: kColor,
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color(inputFieldColor),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    shape: const StadiumBorder(),
+                                    elevation: 10,
+                                    shadowColor: const Color(inputFieldColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const LoginContentNew()));
+                                    print(_passwordController.text);
+                                  },
+                                  child: const Text(
+                                    "Đăng xuất",
                                     style: TextStyle(
                                       color: kColor,
                                       fontSize: 23,

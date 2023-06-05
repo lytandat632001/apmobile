@@ -8,12 +8,13 @@ class FavoriteIcon extends StatefulWidget {
       {Key? key,
       required this.idUser,
       required this.idProduct,
-      required this.idLike})
+      required this.idLike, required this.size})
       : super(key: key);
   final bool stateLike;
   final int? idUser;
   final int idProduct;
   final int idLike;
+  final String size;
 
   @override
   _FavoriteIconState createState() => _FavoriteIconState();
@@ -49,9 +50,10 @@ class _FavoriteIconState extends State<FavoriteIcon> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, int>{
+      body: jsonEncode({
         'idProduct': widget.idProduct,
-        'idUser': widget.idUser!
+        'idUser': widget.idUser!,
+        'size':widget.size
       }),
     );
 

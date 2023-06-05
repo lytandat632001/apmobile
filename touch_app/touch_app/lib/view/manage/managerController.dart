@@ -5,7 +5,6 @@ import 'package:touch_app/view/manage/addProduct.dart';
 import 'package:touch_app/view/manage/editUserPage.dart';
 import 'package:touch_app/view/manage/listEditProduct.dart';
 
-import '../../data/API.dart';
 import 'order.dart';
 
 class ManagerController extends StatefulWidget {
